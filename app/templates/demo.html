@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Health Agent Demo</title>
+    <style>
+      body { font-family: Arial; max-width: 600px; margin: 40px auto; }
+      #chat { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; }
+      button { margin-top: 5px; }
+    </style>
+  </head>
+  <body>
+  <h2>Health Agent Demo</h2>
+
+  <div id="chat"></div>
+
+  <input id="msg" placeholder="Type message..." style="width:100%" />
+  <button onclick="send()">Send</button>
+  <br/>
+  <button onclick="createMeal()">Create Meal Plan</button>
+  <button onclick="createWorkout()">Create Workout Plan</button>
+
+  <script>
+  const userId = "demo_user";
+  const chat = document.getElementById("chat");
+
+  function add(text) {
+    chat.innerHTML += `<div>${text}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  async function send() {
+    const msg = document.getElementById("msg").value;
+    add("You: " + msg);
+
+    const res = await fetch("http://localhost:5001/agent/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: userId, message: msg })
+    });
+
+    const data = await res.json();
+    renderResponse(data);
+  }
+
+  function renderResponse(data) {
+    if (data.type === "action_required") {
+      add("Agent: " + data.message);
+      data.actions.forEach(a => {
+        const btn = document.createElement("button");
+        btn.innerText = a.label;
+
+        btn.onclick = () => {
+          if (a.action === "meal_plan") createMeal();
+          if (a.action === "workout_plan") createWorkout();
+        };
+
+        chat.appendChild(btn);
+      });
+    } else {
+      // Generic rendering for normal messages or returned plans
+      if (data.message) {
+        add("Agent: " + (typeof data.message === 'string' ? data.message : JSON.stringify(data.message)));
+      }
+      if (data.plan) {
+        add('Agent plan: ' + JSON.stringify(data.plan, null, 2));
+      }
+    }
+  }
+
+  async function createMeal() {
+    const res = await fetch("http://localhost:5001/agent/meal-plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: userId })
+    });
+    const data = await res.json();
+    if (data && data.type === 'plan_created') {
+      add("Agent: Meal plan created ✔");
+      await fetchAndRenderPlan('meal');
+    } else {
+      // show server-side error or raw response
+      const msg = (data && data.message) ? data.message : JSON.stringify(data);
+      add("Agent: Error creating meal plan: " + msg);
+    }
+  }
+
+  async function createWorkout() {
+    const res = await fetch("http://localhost:5001/agent/workout-plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: userId })
+    });
+    const data = await res.json();
+    if (data && data.type === 'plan_created') {
+      add("Agent: Workout plan created ✔");
+      await fetchAndRenderPlan('workout');
+    } else {
+      const msg = (data && data.message) ? data.message : JSON.stringify(data);
+      add("Agent: Error creating workout plan: " + msg);
+    }
+  }
+
+  async function fetchAndRenderPlan(type) {
+    const endpoint = type === 'meal' ? 'meal-plan' : 'workout-plan';
+    const res = await fetch(`http://localhost:5001/agent/${endpoint}?user_id=${encodeURIComponent(userId)}`);
+    if (!res.ok) {
+      add('Agent: Failed to fetch plan');
+      return;
+    }
+    const data = await res.json();
+    if (data.type === 'no_plan') {
+      add('Agent: ' + data.message);
+      return;
+    }
+    add('Agent: ' + JSON.stringify(data.plan, null, 2));
+  }
+  </script>
+  </body>
+</html>

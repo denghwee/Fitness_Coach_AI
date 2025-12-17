@@ -1,0 +1,116 @@
+--- MEAL PLAN FAILURE ---
+Here's a 7-day meal plan in JSON format:
+
+```json
+{
+  "mealPlan": {
+    "day1": {
+      "breakfast": "Oatmeal with sliced bananas and almonds",
+      "lunch": "Grilled chicken salad with mixed greens and vinaigrette",
+      "dinner": "Baked salmon with quinoa and steamed broccoli",
+      "snacks": ["Greek yogurt", "Carrot sticks with hummus"]
+    },
+    "day2": {
+      "breakfast": "Smoothie with spinach, banana, and protein powder",
+      "lunch": "Turkey and avocado wrap with whole grain tortilla",
+      "dinner": "Stir-fried tofu with mixed vegetables and brown rice",
+      "snacks": ["Apple slices with almond butter", "Cottage cheese"]
+    },
+    "day3": {
+      "breakfast": "Scrambled eggs with spinach and whole grain toast",
+      "lunch": "Quinoa salad with chickpeas, cucumber, and feta",
+      "dinner": "Grilled shrimp tacos with cabbage slaw",
+      "snacks": ["Trail mix", "Celery sticks with peanut butter"]
+    },
+    "day4": {
+      "breakfast": "Chia seed pudding with berries",
+      "lunch": "Lentil soup with a side of whole grain bread",
+      "dinner": "Roasted chicken with sweet potatoes and green beans",
+      "snacks": ["Hard-boiled eggs", "Rice cakes with avocado"]
+    },
+    "day5": {
+      "breakfast": "Greek yogurt parfait with granola and mixed fruit",
+      "lunch": "Caprese salad with tomatoes, mozzarella, and basil",
+      "dinner": "Beef stir-fry with bell peppers and brown rice",
+      "snacks": ["Banana", "Dark chocolate square"]
+    },
+    "day6": {
+      "breakfast": "Smoothie bowl with mixed berries and granola",
+      "lunch": "Tuna salad with mixed greens and balsamic dressing",
+      "dinner": "Vegetable curry with chickpeas and basmati rice",
+      "snacks": ["Popcorn", "Sliced cucumber with tzatziki"]
+    },
+    "day7": {
+      "breakfast": "Whole grain pancakes with maple syrup and berries",
+      "lunch": "Chicken Caesar salad with croutons",
+      "dinner": "Pasta with marinara sauce and a side of steamed vegetables",
+      "snacks": ["Fruit smoothie", "Nuts"]
+    }
+  }
+}
+```
+
+Feel free to adjust any meals or snacks according to your preferences or dietary needs!
+
+--- WORKOUT PLAN FAILURE ---
+Here's a sample weekly workout plan in JSON format:
+
+```json
+{
+  "weekly_workout_plan": {
+    "Monday": {
+      "workout_type": "Strength Training",
+      "exercises": [
+        {"name": "Squats", "sets": 3, "reps": 12},
+        {"name": "Push-ups", "sets": 3, "reps": 10},
+        {"name": "Dumbbell Rows", "sets": 3, "reps": 12},
+        {"name": "Plank", "duration": "30 seconds", "sets": 3}
+      ]
+    },
+    "Tuesday": {
+      "workout_type": "Cardio",
+      "exercises": [
+        {"name": "Running", "duration": "30 minutes"},
+        {"name": "Jump Rope", "duration": "10 minutes"}
+      ]
+    },
+    "Wednesday": {
+      "workout_type": "Flexibility",
+      "exercises": [
+        {"name": "Yoga", "duration": "30 minutes"},
+        {"name": "Stretching", "duration": "15 minutes"}
+      ]
+    },
+    "Thursday": {
+      "workout_type": "Strength Training",
+      "exercises": [
+        {"name": "Deadlifts", "sets": 3, "reps": 10},
+        {"name": "Bench Press", "sets": 3, "reps": 10},
+        {"name": "Lunges", "sets": 3, "reps": 12},
+        {"name": "Russian Twists", "sets": 3, "reps": 15}
+      ]
+    },
+    "Friday": {
+      "workout_type": "Cardio",
+      "exercises": [
+        {"name": "Cycling", "duration": "30 minutes"},
+        {"name": "High-Intensity Interval Training (HIIT)", "duration": "15 minutes"}
+      ]
+    },
+    "Saturday": {
+      "workout_type": "Active Recovery",
+      "exercises": [
+        {"name": "Walking", "duration": "30 minutes"},
+        {"name": "Light Stretching", "duration": "15 minutes"}
+      ]
+    },
+    "Sunday": {
+      "workout_type": "Rest",
+      "notes": "Focus on hydration and nutrition."
+    }
+  }
+}
+```
+
+Feel free to adjust the exercises, sets, and durations based on your fitness level and goals!
+

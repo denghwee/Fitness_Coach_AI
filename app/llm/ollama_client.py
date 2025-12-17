@@ -23,3 +23,7 @@ class OllamaClient(BaseLLM):
         response = requests.post(self.url, json=payload, timeout=120)
         response.raise_for_status()
         return response.json()["message"]["content"]
+
+    def moderate(self, text: str):
+        # Ollama client: moderation not implemented — return None to signal unsupported
+        return None

@@ -1,0 +1,178 @@
+{
+  "demo_user": {
+    "meal_plan": {
+      "plan": {
+        "daily_meals": {
+          "day1": {
+            "breakfast": "Greek yogurt with mixed berries and a sprinkle of granola",
+            "lunch": "Quinoa salad with chickpeas, cucumber, and lemon dressing",
+            "dinner": "Grilled chicken breast with steamed broccoli and brown rice",
+            "snacks": [
+              "Carrot sticks",
+              "Almonds"
+            ]
+          },
+          "day2": {
+            "breakfast": "Smoothie with spinach, banana, and protein powder",
+            "lunch": "Turkey and avocado wrap with whole grain tortilla",
+            "dinner": "Baked salmon with asparagus and sweet potato",
+            "snacks": [
+              "Apple slices",
+              "Hummus"
+            ]
+          },
+          "day3": {
+            "breakfast": "Oatmeal topped with sliced banana and honey",
+            "lunch": "Lentil soup with a side of whole grain bread",
+            "dinner": "Stir-fried tofu with mixed vegetables and quinoa",
+            "snacks": [
+              "Cucumber slices",
+              "Greek yogurt"
+            ]
+          },
+          "day4": {
+            "breakfast": "Scrambled eggs with spinach and whole grain toast",
+            "lunch": "Chicken Caesar salad with light dressing",
+            "dinner": "Pasta with marinara sauce and grilled vegetables",
+            "snacks": [
+              "Mixed nuts",
+              "Celery sticks"
+            ]
+          },
+          "day5": {
+            "breakfast": "Chia seed pudding with almond milk and berries",
+            "lunch": "Tuna salad with mixed greens and balsamic vinaigrette",
+            "dinner": "Beef stir-fry with bell peppers and brown rice",
+            "snacks": [
+              "Rice cakes",
+              "Peanut butter"
+            ]
+          },
+          "day6": {
+            "breakfast": "Whole grain pancakes with maple syrup and strawberries",
+            "lunch": "Vegetable wrap with hummus and spinach",
+            "dinner": "Grilled shrimp with quinoa and steamed green beans",
+            "snacks": [
+              "Trail mix",
+              "Orange slices"
+            ]
+          },
+          "day7": {
+            "breakfast": "Smoothie bowl with banana, spinach, and topped with nuts",
+            " lunch": "Quinoa and black bean salad with avocado",
+            "dinner": "Baked chicken thighs with roasted Brussels sprouts and carrots",
+            "snacks": [
+              "Popcorn",
+              "Dark chocolate"
+            ]
+          }
+        },
+        "explanation": "Balanced meals focusing on lean proteins, whole grains, and plenty of fruits and vegetables to support overall health.",
+        "disclaimer": "This is general nutrition guidance, not medical advice."
+      },
+      "start_date": "2025-12-17",
+      "end_date": "2025-12-23"
+    },
+    "workout_plan": {
+      "plan": {
+        "weekly_schedule": {
+          "Monday": {
+            "workout_type": "Strength Training",
+            "exercises": [
+              {
+                "name": "Squats",
+                "sets": 3,
+                "reps": 12
+              },
+              {
+                "name": "Bench Press",
+                "sets": 3,
+                "reps": 10
+              },
+              {
+                "name": "Bent-over Rows",
+                "sets": 3,
+                "reps": 12
+              }
+            ]
+          },
+          "Tuesday": {
+            "workout_type": "Cardio",
+            "exercises": [
+              {
+                "name": "Running",
+                "duration": "30 minutes"
+              }
+            ]
+          },
+          "Wednesday": {
+            "workout_type": "Strength Training",
+            "exercises": [
+              {
+                "name": "Deadlifts",
+                "sets": 3,
+                "reps": 10
+              },
+              {
+                "name": "Shoulder Press",
+                "sets": 3,
+                "reps": 12
+              },
+              {
+                "name": "Lunges",
+                "sets": 3,
+                "reps": 12
+              }
+            ]
+          },
+          "Thursday": {
+            "workout_type": "Active Recovery",
+            "exercises": [
+              {
+                "name": "Yoga",
+                "duration": "30 minutes"
+              }
+            ]
+          },
+          "Friday": {
+            "workout_type": "Strength Training",
+            "exercises": [
+              {
+                "name": "Pull-ups",
+                "sets": 3,
+                "reps": 8
+              },
+              {
+                "name": "Leg Press",
+                "sets": 3,
+                "reps": 12
+              },
+              {
+                "name": "Plank",
+                "sets": 3,
+                "duration": "30 seconds"
+              }
+            ]
+          },
+          "Saturday": {
+            "workout_type": "Cardio",
+            "exercises": [
+              {
+                "name": "Cycling",
+                "duration": "30 minutes"
+              }
+            ]
+          },
+          "Sunday": {
+            "workout_type": "Rest",
+            "notes": "Focus on hydration and nutrition."
+          }
+        },
+        "explanation": "A balanced approach alternating strength training and cardio, with active recovery and rest.",
+        "disclaimer": "Consult a professional before starting a new exercise program."
+      },
+      "start_date": "2025-12-17",
+      "end_date": "2025-12-23"
+    }
+  }
+}

@@ -18,15 +18,15 @@ class Config:
     )
 
     # ===== LLM =====
-    LLM_PROVIDER = os.get_env("LLM_PROVIDER", "openai")
+    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai")
 
     # ===== OPENAI =====
-    OPEN_API_KEY = os.get_env("OPEN_AI_KEY")
-    OPENAI_MODEL = os.get_env("OPENAI_MODEL", "gpt-4o-mini")
+    OPENAI_API_KEY = os.getenv("OPEN_AI_KEY")
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
     # ===== OLLAMA =====
-    OLLAMA_MODEL = os.get_env("OLLAMA_MODEL", "llama3.1")
-    OLLAMA_BASE_URL = os.get_env("OLLAMA_BASE_URL", "http://localhost:11434")
+    OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1")
+    OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
     # ===== AGENT SETTINGS =====
     DEFAULT_TEMPERATURE = float(os.getenv("DEFAULT_TEMPERATURE", 0.3))
