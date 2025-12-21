@@ -77,7 +77,7 @@
       "plan": {
         "weekly_schedule": {
           "Monday": {
-            "workout_type": "Upper Body Strength",
+            "workout_type": "Upper Body",
             "exercises": [
               {
                 "name": "Bench Press",
@@ -105,6 +105,11 @@
                 "reps": 10
               },
               {
+                "name": "Side Lateral Raise",
+                "sets": 2,
+                "reps": 12
+              },
+              {
                 "name": "Cable Tricep Extensions",
                 "sets": 3,
                 "reps": 10
@@ -117,7 +122,7 @@
             ]
           },
           "Tuesday": {
-            "workout_type": "Lower Body Strength",
+            "workout_type": "Lower Body",
             "exercises": [
               {
                 "name": "Squats",
@@ -145,6 +150,11 @@
                 "reps": 10
               },
               {
+                "name": "Seated Calf Raise",
+                "sets": 2,
+                "reps": 10
+              },
+              {
                 "name": "Cable Crunch",
                 "sets": 3,
                 "reps": 10
@@ -156,7 +166,7 @@
             "notes": "Focus on recovery and hydration."
           },
           "Thursday": {
-            "workout_type": "Upper Body Strength",
+            "workout_type": "Upper Body",
             "exercises": [
               {
                 "name": "Incline Dumbbell Bench Press",
@@ -186,7 +196,7 @@
             ]
           },
           "Friday": {
-            "workout_type": "Lower Body Strength",
+            "workout_type": "Lower Body",
             "exercises": [
               {
                 "name": "Leg Press",
@@ -204,31 +214,31 @@
                 "reps": 12
               },
               {
-                "name": "Seated Leg Curl",
+                "name": "Hack Squat",
                 "sets": 2,
                 "reps": 10
               },
               {
-                "name": "Planks",
-                "sets": 3,
-                "reps": 60
+                "name": "Seated Leg Curl",
+                "sets": 2,
+                "reps": 10
               }
             ]
           },
           "Saturday": {
             "workout_type": "Rest",
-            "notes": "Focus on light activity like walking or stretching."
+            "notes": "Focus on stretching and light activity."
           },
           "Sunday": {
             "workout_type": "Rest",
             "notes": "Prepare for the upcoming week."
           }
         },
-        "explanation": "This plan alternates upper and lower body workouts to promote hypertrophy while allowing recovery.",
+        "explanation": "This plan alternates upper and lower body workouts to promote hypertrophy while allowing adequate recovery.",
         "disclaimer": "Consult a professional before starting a new exercise program."
       },
-      "start_date": "2025-12-21",
-      "end_date": "2025-12-27"
+      "start_date": "2025-12-22",
+      "end_date": "2025-12-28"
     }
   }
 }
