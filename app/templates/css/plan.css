@@ -1,0 +1,7 @@
+.workout-plan { font-family: system-ui, Arial; line-height: 1.4; }
+.workout-day { border-bottom: 1px solid #eee; padding: 8px 0; }
+.workout-day h4 { margin: 0 0 6px; font-size: 1rem; color: #0b5; }
+.exercises { margin: 0 0 8px 18px; padding: 0; }
+.exercise { margin: 4px 0; }
+.explanation { background:#f9f9f9; padding:8px; border-radius:6px; margin-top:8px; }
+.disclaimer { font-size:0.85rem; color:#666; margin-top:8px; }

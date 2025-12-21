@@ -35,3 +35,14 @@ SAFETY_SCHEMA = {
     },
     "required": ["safe", "category"]
 }
+
+OUTPUT_SCHEMA = """
+Return STRICT JSON:
+{
+  "plan": [],
+  "grocery_list": [],
+  "daily_calories": [],
+  "sources": [],
+  "issues": []
+}
+"""

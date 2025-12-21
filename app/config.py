@@ -20,8 +20,12 @@ class Config:
     # ===== LLM =====
     LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai")
 
+    # ===== RAG =====
+    DB_TYPE = os.getenv("DB_TYPE", "chroma")
+    EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "openai")
+
     # ===== OPENAI =====
-    OPENAI_API_KEY = os.getenv("OPEN_AI_KEY")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
     # ===== OLLAMA =====

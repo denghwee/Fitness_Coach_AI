@@ -77,102 +77,158 @@
       "plan": {
         "weekly_schedule": {
           "Monday": {
-            "workout_type": "Strength Training",
+            "workout_type": "Upper Body Strength",
             "exercises": [
-              {
-                "name": "Squats",
-                "sets": 3,
-                "reps": 12
-              },
               {
                 "name": "Bench Press",
-                "sets": 3,
-                "reps": 10
-              },
-              {
-                "name": "Bent-over Rows",
-                "sets": 3,
-                "reps": 12
-              }
-            ]
-          },
-          "Tuesday": {
-            "workout_type": "Cardio",
-            "exercises": [
-              {
-                "name": "Running",
-                "duration": "30 minutes"
-              }
-            ]
-          },
-          "Wednesday": {
-            "workout_type": "Strength Training",
-            "exercises": [
-              {
-                "name": "Deadlifts",
-                "sets": 3,
-                "reps": 10
-              },
-              {
-                "name": "Shoulder Press",
-                "sets": 3,
-                "reps": 12
-              },
-              {
-                "name": "Lunges",
-                "sets": 3,
-                "reps": 12
-              }
-            ]
-          },
-          "Thursday": {
-            "workout_type": "Active Recovery",
-            "exercises": [
-              {
-                "name": "Yoga",
-                "duration": "30 minutes"
-              }
-            ]
-          },
-          "Friday": {
-            "workout_type": "Strength Training",
-            "exercises": [
-              {
-                "name": "Pull-ups",
                 "sets": 3,
                 "reps": 8
               },
               {
-                "name": "Leg Press",
+                "name": "Barbell Row",
+                "sets": 3,
+                "reps": 8
+              },
+              {
+                "name": "Seated Overhead Dumbbell Press",
+                "sets": 3,
+                "reps": 10
+              },
+              {
+                "name": "Pec Dec",
+                "sets": 2,
+                "reps": 10
+              },
+              {
+                "name": "V-Bar Lat Pull Down",
+                "sets": 2,
+                "reps": 10
+              },
+              {
+                "name": "Cable Tricep Extensions",
+                "sets": 3,
+                "reps": 10
+              },
+              {
+                "name": "Cable Curls",
+                "sets": 3,
+                "reps": 10
+              }
+            ]
+          },
+          "Tuesday": {
+            "workout_type": "Lower Body Strength",
+            "exercises": [
+              {
+                "name": "Squats",
+                "sets": 3,
+                "reps": 8
+              },
+              {
+                "name": "Stiff Leg Deadlifts",
+                "sets": 3,
+                "reps": 10
+              },
+              {
+                "name": "Standing Calf Raise",
                 "sets": 3,
                 "reps": 12
               },
               {
-                "name": "Plank",
+                "name": "Leg Extensions",
+                "sets": 2,
+                "reps": 10
+              },
+              {
+                "name": "Leg Curl",
+                "sets": 2,
+                "reps": 10
+              },
+              {
+                "name": "Cable Crunch",
                 "sets": 3,
-                "duration": "30 seconds"
+                "reps": 10
+              }
+            ]
+          },
+          "Wednesday": {
+            "workout_type": "Rest",
+            "notes": "Focus on recovery and hydration."
+          },
+          "Thursday": {
+            "workout_type": "Upper Body Strength",
+            "exercises": [
+              {
+                "name": "Incline Dumbbell Bench Press",
+                "sets": 3,
+                "reps": 8
+              },
+              {
+                "name": "Military Press",
+                "sets": 3,
+                "reps": 10
+              },
+              {
+                "name": "Pull Ups or Machine Rows",
+                "sets": 2,
+                "reps": 8
+              },
+              {
+                "name": "Dumbbell Curls",
+                "sets": 3,
+                "reps": 10
+              },
+              {
+                "name": "Machine Tricep Dip",
+                "sets": 3,
+                "reps": 10
+              }
+            ]
+          },
+          "Friday": {
+            "workout_type": "Lower Body Strength",
+            "exercises": [
+              {
+                "name": "Leg Press",
+                "sets": 3,
+                "reps": 10
+              },
+              {
+                "name": "Dumbbell Stiff Leg Deadlifts",
+                "sets": 3,
+                "reps": 10
+              },
+              {
+                "name": "Leg Press Calf Raise",
+                "sets": 3,
+                "reps": 12
+              },
+              {
+                "name": "Seated Leg Curl",
+                "sets": 2,
+                "reps": 10
+              },
+              {
+                "name": "Planks",
+                "sets": 3,
+                "reps": 60
               }
             ]
           },
           "Saturday": {
-            "workout_type": "Cardio",
-            "exercises": [
-              {
-                "name": "Cycling",
-                "duration": "30 minutes"
-              }
-            ]
+            "workout_type": "Rest",
+            "notes": "Focus on light activity like walking or stretching."
           },
           "Sunday": {
             "workout_type": "Rest",
-            "notes": "Focus on hydration and nutrition."
+            "notes": "Prepare for the upcoming week."
           }
         },
-        "explanation": "A balanced approach alternating strength training and cardio, with active recovery and rest.",
+        "explanation": "This plan alternates upper and lower body workouts to promote hypertrophy while allowing recovery.",
         "disclaimer": "Consult a professional before starting a new exercise program."
       },
-      "start_date": "2025-12-17",
-      "end_date": "2025-12-23"
+      "start_date": "2025-12-21",
+      "end_date": "2025-12-27"
     }
   }
 }

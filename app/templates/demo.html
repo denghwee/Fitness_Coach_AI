@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <title>Health Agent Demo</title>
+    <link rel="stylesheet" href="/static/css/plan.css">
+    <script src="/static/js/utils.js"></script>
     <style>
       body { font-family: Arial; max-width: 600px; margin: 40px auto; }
       #chat { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; }
@@ -114,6 +116,14 @@
       return;
     }
     add('Agent: ' + JSON.stringify(data.plan, null, 2));
+    const container = document.getElementById('chat'); // or a dedicated div
+    if (data.pretty) {
+      // server-provided pretty (prefer) — safe to render (but trust source)
+      container.innerHTML += '<div class="agent-pretty">' + data.pretty + '</div>';
+    } else if (data.plan) {
+      const html = formatWorkoutPlan(data.plan);
+      container.innerHTML += '<div class="agent-pretty">' + html + '</div>';
+    }
   }
   </script>
   </body>

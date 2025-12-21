@@ -8,6 +8,8 @@ from app.agent.validator import validate_json
 from app.agent.planner import run_planner
 from app.agent.safety import run_safety_check
 from app.memory.store import get_user_state, save_plan, is_plan_active
+from app.rag.qa import answer_query
+from app.rag.retriever import Retriever
 
 
 # ===== Helpers =====
@@ -15,6 +17,33 @@ def default_plan_window():
     start = date.today()
     end = start + timedelta(days=6)
     return start, end
+
+
+def should_run_planner(message: str, state: dict) -> bool:
+    """Minimal heuristic: return True only when message likely requests planning.
+
+    Keep this light — used to avoid running the planner during normal chat.
+    """
+    if not message:
+        return False
+    msg = message.lower()
+
+    triggers = [
+        "plan", "kế hoạch", "meal plan", "workout plan", "tạo", "create", "generate",
+        "recommend", "gợi ý", "lên kế hoạch", "cần", "muốn"
+    ]
+    if any(t in msg for t in triggers):
+        return True
+
+    # If user asks to view a plan but none exists, allow planner to run (to offer creation)
+    view_words = ["show", "xem", "cho tôi", "hiện"]
+    meal_words = ["meal", "bữa", "ăn"]
+    workout_words = ["workout", "tập"]
+    if any(v in msg for v in view_words) and (any(m in msg for m in meal_words) or any(w in msg for w in workout_words)):
+        if not (is_plan_active(state, "meal_plan") or is_plan_active(state, "workout_plan")):
+            return True
+
+    return False
 
 
 # ===== Chat entry =====
@@ -45,7 +74,7 @@ def handle_chat(llm, user_id: str, message: str):
         return {
             "type": "message",
             "message": "Here is your current meal plan for this week.",
-             "plan": state["meal_plan"]["plan"],
+            "plan": state["meal_plan"]["plan"],
             "intent": "meal",
             "decision": "use_existing"
         }
@@ -59,10 +88,53 @@ def handle_chat(llm, user_id: str, message: str):
             "decision": "use_existing"
         }
 
-    # 3. Planner reasoning
-    plan = run_planner(llm, message, state)
-    intent = plan["intent"]
-    decision = plan["decision"]
+    # 3. Planner reasoning (minimal gating)
+    if should_run_planner(message, state):
+        plan = run_planner(llm, message, state)
+        intent = plan.get("intent")
+        decision = plan.get("decision")
+    else: # General conversation
+        def _looks_like_question(msg: str) -> bool:
+            if not msg:
+                return False
+            m = msg.strip().lower()
+            if m.endswith("?"):
+                return True
+            qwords = ["who", "what", "when", "where", "why", "how", "làm sao", "cách", "tại sao", "gì", "ai", "ở đâu"]
+            if any(m.startswith(w) for w in qwords):
+                return True
+            if any(w in m for w in ["?", "làm sao", "cách", "tại sao"]):
+                return True
+            return False
+
+        if _looks_like_question(message):
+            try:
+                rag = answer_query(message, user_profile=state.get("profile"), k=5)
+                return {
+                    "type": "message",
+                    "message": rag.get("answer") or "",
+                    "sources": rag.get("sources", []),
+                    "intent": "rag",
+                    "decision": "answer"
+                }
+            except Exception:
+                # fallback to direct LLM chat if RAG fails
+                response = llm.chat(SYSTEM_PROMPT, message)
+                return {
+                    "type": "message",
+                    "message": response,
+                    "intent": "general",
+                    "decision": "answer"
+                }
+
+        # Not a question — regular chat
+        response = llm.chat(SYSTEM_PROMPT, message)
+        return {
+            "type": "message",
+            "message": response,
+            "intent": "general",
+            "decision": "answer"
+        }
 
     # ===== MEAL PLAN FLOW =====
     if intent == "meal":
@@ -109,15 +181,6 @@ def handle_chat(llm, user_id: str, message: str):
                 "decision": decision
             }
 
-    # ===== GENERAL CHAT =====
-    response = llm.chat(SYSTEM_PROMPT, message)
-    return {
-        "type": "message",
-        "message": response,
-        "intent": "general",
-        "decision": "answer"
-    }
-
 
 # ===== Explicit actions (buttons) =====
 def create_meal_plan(llm, user_id: str):
@@ -147,7 +210,20 @@ def create_meal_plan(llm, user_id: str):
 
     profile_text = json.dumps({"profile": profile, "skin": skin, "goals": goals}, ensure_ascii=False)
 
-    plan_text = llm.chat(SYSTEM_PROMPT, MEAL_PLAN_PROMPT + "\n\nUser profile: " + profile_text)
+    # Retrieve relevant RAG documents (nutrition, recipes, guidelines)
+    try:
+        retriever = Retriever()
+        expanded_q = (
+            f"meal plan guidelines diet={profile.get('diet')} calories={profile.get('calorie_target')} goals={goals} "
+            f"equipment={profile.get('equipment')}"
+        )
+        docs = retriever.retrieve(expanded_q, k=6)
+        context = "\n\n".join(f"[{d['metadata'].get('source')}]\n{d['page_content']}" for d in docs)
+    except Exception:
+        context = ""
+
+    prompt = MEAL_PLAN_PROMPT + "\n\nContext:\n" + context + "\n\nUser profile: " + profile_text
+    plan_text = llm.chat(SYSTEM_PROMPT, prompt)
 
     required = ["daily_meals", "explanation", "disclaimer"]
 
@@ -226,7 +302,19 @@ def create_workout_plan(llm, user_id: str):
     goals = state.get("goals")
     profile_text = json.dumps({"profile": profile, "goals": goals}, ensure_ascii=False)
 
-    plan_text = llm.chat(SYSTEM_PROMPT, WORKOUT_PROMPT + "\n\nUser profile: " + profile_text)
+    # Retrieve relevant RAG documents (workout plans, progressions, safety)
+    try:
+        retriever = Retriever()
+        expanded_q = (
+            f"workout plan guidance goals={goals} equipment={profile.get('equipment')} profile={profile}"
+        )
+        docs = retriever.retrieve(expanded_q, k=6)
+        context = "\n\n".join(f"[{d['metadata'].get('source')}]\n{d['page_content']}" for d in docs)
+    except Exception:
+        context = ""
+
+    prompt = WORKOUT_PROMPT + "\n\nContext:\n" + context + "\n\nUser profile: " + profile_text
+    plan_text = llm.chat(SYSTEM_PROMPT, prompt)
 
     required = ["weekly_schedule", "explanation", "disclaimer"]
 

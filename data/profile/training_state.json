@@ -1,0 +1,11 @@
+{
+  "current_week": 3,
+  "last_week_volume": {
+    "chest": 12,
+    "back": 14,
+    "legs": 10
+  },
+  "average_rpe": 7.5,
+  "missed_sessions": 1,
+  "reported_soreness": ["hamstring"]
+}
