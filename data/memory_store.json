@@ -4,238 +4,790 @@
       "plan": {
         "daily_meals": {
           "day1": {
-            "breakfast": "Greek yogurt with mixed berries and a sprinkle of granola",
-            "lunch": "Quinoa salad with chickpeas, cucumber, and lemon dressing",
-            "dinner": "Grilled chicken breast with steamed broccoli and brown rice",
+            "breakfast": {
+              "description": "Bánh mì trứng",
+              "ingredients": [
+                {
+                  "name": "Bánh mì",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Trứng gà",
+                  "amount_g": 50
+                },
+                {
+                  "name": "Rau sống (xà lách, ngò)",
+                  "amount_g": 30
+                }
+              ],
+              "nutrition": {
+                "calories": 350,
+                "macros": {
+                  "protein_g": 15,
+                  "carbs_g": 45,
+                  "fat_g": 10
+                }
+              }
+            },
+            "lunch": {
+              "description": "Cơm gà xé phay",
+              "ingredients": [
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                },
+                {
+                  "name": "Gà luộc",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Rau muống",
+                  "amount_g": 50
+                }
+              ],
+              "nutrition": {
+                "calories": 600,
+                "macros": {
+                  "protein_g": 40,
+                  "carbs_g": 70,
+                  "fat_g": 10
+                }
+              }
+            },
+            "dinner": {
+              "description": "Thịt heo kho tàu",
+              "ingredients": [
+                {
+                  "name": "Thịt heo",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Trứng gà",
+                  "amount_g": 50
+                },
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                },
+                {
+                  "name": "Rau xanh",
+                  "amount_g": 50
+                }
+              ],
+              "nutrition": {
+                "calories": 700,
+                "macros": {
+                  "protein_g": 35,
+                  "carbs_g": 80,
+                  "fat_g": 20
+                }
+              }
+            },
             "snacks": [
-              "Carrot sticks",
-              "Almonds"
+              {
+                "description": "Sinh tố bơ",
+                "ingredients": [
+                  {
+                    "name": "Bơ",
+                    "amount_g": 100
+                  },
+                  {
+                    "name": "Sữa tươi",
+                    "amount_g": 200
+                  }
+                ],
+                "nutrition": {
+                  "calories": 300,
+                  "macros": {
+                    "protein_g": 6,
+                    "carbs_g": 30,
+                    "fat_g": 20
+                  }
+                }
+              }
             ]
           },
           "day2": {
-            "breakfast": "Smoothie with spinach, banana, and protein powder",
-            "lunch": "Turkey and avocado wrap with whole grain tortilla",
-            "dinner": "Baked salmon with asparagus and sweet potato",
+            "breakfast": {
+              "description": "Phở bò",
+              "ingredients": [
+                {
+                  "name": "Bánh phở",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Thịt bò",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Nước dùng",
+                  "amount_g": 200
+                }
+              ],
+              "nutrition": {
+                "calories": 500,
+                "macros": {
+                  "protein_g": 30,
+                  "carbs_g": 60,
+                  "fat_g": 10
+                }
+              }
+            },
+            "lunch": {
+              "description": "Cá kho tộ",
+              "ingredients": [
+                {
+                  "name": "Cá lóc",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                },
+                {
+                  "name": "Rau muống",
+                  "amount_g": 50
+                }
+              ],
+              "nutrition": {
+                "calories": 600,
+                "macros": {
+                  "protein_g": 40,
+                  "carbs_g": 70,
+                  "fat_g": 15
+                }
+              }
+            },
+            "dinner": {
+              "description": "Tôm xào rau củ",
+              "ingredients": [
+                {
+                  "name": "Tôm",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Rau củ (carrot, đậu que)",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                }
+              ],
+              "nutrition": {
+                "calories": 600,
+                "macros": {
+                  "protein_g": 30,
+                  "carbs_g": 70,
+                  "fat_g": 15
+                }
+              }
+            },
             "snacks": [
-              "Apple slices",
-              "Hummus"
+              {
+                "description": "Trái cây tươi",
+                "ingredients": [
+                  {
+                    "name": "Chuối",
+                    "amount_g": 100
+                  }
+                ],
+                "nutrition": {
+                  "calories": 90,
+                  "macros": {
+                    "protein_g": 1,
+                    "carbs_g": 23,
+                    "fat_g": 0
+                  }
+                }
+              }
             ]
           },
           "day3": {
-            "breakfast": "Oatmeal topped with sliced banana and honey",
-            "lunch": "Lentil soup with a side of whole grain bread",
-            "dinner": "Stir-fried tofu with mixed vegetables and quinoa",
+            "breakfast": {
+              "description": "Bánh mì kẹp thịt",
+              "ingredients": [
+                {
+                  "name": "Bánh mì",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Thịt nguội",
+                  "amount_g": 50
+                },
+                {
+                  "name": "Rau sống",
+                  "amount_g": 30
+                }
+              ],
+              "nutrition": {
+                "calories": 400,
+                "macros": {
+                  "protein_g": 20,
+                  "carbs_g": 50,
+                  "fat_g": 15
+                }
+              }
+            },
+            "lunch": {
+              "description": "Gà nướng",
+              "ingredients": [
+                {
+                  "name": "Gà",
+                  "amount_g": 150
+                },
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                },
+                {
+                  "name": "Rau xanh",
+                  "amount_g": 50
+                }
+              ],
+              "nutrition": {
+                "calories": 700,
+                "macros": {
+                  "protein_g": 40,
+                  "carbs_g": 80,
+                  "fat_g": 20
+                }
+              }
+            },
+            "dinner": {
+              "description": "Canh chua cá",
+              "ingredients": [
+                {
+                  "name": "Cá",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Cà chua",
+                  "amount_g": 50
+                },
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                }
+              ],
+              "nutrition": {
+                "calories": 500,
+                "macros": {
+                  "protein_g": 30,
+                  "carbs_g": 60,
+                  "fat_g": 10
+                }
+              }
+            },
             "snacks": [
-              "Cucumber slices",
-              "Greek yogurt"
+              {
+                "description": "Hạt điều rang",
+                "ingredients": [
+                  {
+                    "name": "Hạt điều",
+                    "amount_g": 30
+                  }
+                ],
+                "nutrition": {
+                  "calories": 180,
+                  "macros": {
+                    "protein_g": 5,
+                    "carbs_g": 10,
+                    "fat_g": 15
+                  }
+                }
+              }
             ]
           },
           "day4": {
-            "breakfast": "Scrambled eggs with spinach and whole grain toast",
-            "lunch": "Chicken Caesar salad with light dressing",
-            "dinner": "Pasta with marinara sauce and grilled vegetables",
+            "breakfast": {
+              "description": "Cháo cá",
+              "ingredients": [
+                {
+                  "name": "Gạo",
+                  "amount_g": 50
+                },
+                {
+                  "name": "Cá",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Rau thơm",
+                  "amount_g": 20
+                }
+              ],
+              "nutrition": {
+                "calories": 350,
+                "macros": {
+                  "protein_g": 25,
+                  "carbs_g": 50,
+                  "fat_g": 5
+                }
+              }
+            },
+            "lunch": {
+              "description": "Bún thịt nướng",
+              "ingredients": [
+                {
+                  "name": "Bún",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Thịt nướng",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Rau sống",
+                  "amount_g": 50
+                }
+              ],
+              "nutrition": {
+                "calories": 600,
+                "macros": {
+                  "protein_g": 30,
+                  "carbs_g": 80,
+                  "fat_g": 15
+                }
+              }
+            },
+            "dinner": {
+              "description": "Thịt bò xào rau",
+              "ingredients": [
+                {
+                  "name": "Thịt bò",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Rau củ",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                }
+              ],
+              "nutrition": {
+                "calories": 600,
+                "macros": {
+                  "protein_g": 35,
+                  "carbs_g": 70,
+                  "fat_g": 15
+                }
+              }
+            },
             "snacks": [
-              "Mixed nuts",
-              "Celery sticks"
+              {
+                "description": "Sữa chua",
+                "ingredients": [
+                  {
+                    "name": "Sữa chua",
+                    "amount_g": 150
+                  }
+                ],
+                "nutrition": {
+                  "calories": 100,
+                  "macros": {
+                    "protein_g": 5,
+                    "carbs_g": 15,
+                    "fat_g": 2
+                  }
+                }
+              }
             ]
           },
           "day5": {
-            "breakfast": "Chia seed pudding with almond milk and berries",
-            "lunch": "Tuna salad with mixed greens and balsamic vinaigrette",
-            "dinner": "Beef stir-fry with bell peppers and brown rice",
+            "breakfast": {
+              "description": "Bánh mì kẹp thịt nguội",
+              "ingredients": [
+                {
+                  "name": "Bánh mì",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Thịt nguội",
+                  "amount_g": 50
+                },
+                {
+                  "name": "Dưa leo",
+                  "amount_g": 30
+                }
+              ],
+              "nutrition": {
+                "calories": 400,
+                "macros": {
+                  "protein_g": 20,
+                  "carbs_g": 50,
+                  "fat_g": 15
+                }
+              }
+            },
+            "lunch": {
+              "description": "Cá nướng",
+              "ingredients": [
+                {
+                  "name": "Cá",
+                  "amount_g": 150
+                },
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                },
+                {
+                  "name": "Rau xanh",
+                  "amount_g": 50
+                }
+              ],
+              "nutrition": {
+                "calories": 600,
+                "macros": {
+                  "protein_g": 40,
+                  "carbs_g": 70,
+                  "fat_g": 10
+                }
+              }
+            },
+            "dinner": {
+              "description": "Thịt heo xào chua ngọt",
+              "ingredients": [
+                {
+                  "name": "Thịt heo",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Rau củ",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                }
+              ],
+              "nutrition": {
+                "calories": 600,
+                "macros": {
+                  "protein_g": 30,
+                  "carbs_g": 70,
+                  "fat_g": 15
+                }
+              }
+            },
             "snacks": [
-              "Rice cakes",
-              "Peanut butter"
+              {
+                "description": "Trái cây tươi",
+                "ingredients": [
+                  {
+                    "name": "Táo",
+                    "amount_g": 100
+                  }
+                ],
+                "nutrition": {
+                  "calories": 50,
+                  "macros": {
+                    "protein_g": 1,
+                    "carbs_g": 14,
+                    "fat_g": 0
+                  }
+                }
+              }
             ]
           },
           "day6": {
-            "breakfast": "Whole grain pancakes with maple syrup and strawberries",
-            "lunch": "Vegetable wrap with hummus and spinach",
-            "dinner": "Grilled shrimp with quinoa and steamed green beans",
+            "breakfast": {
+              "description": "Cháo thịt bằm",
+              "ingredients": [
+                {
+                  "name": "Gạo",
+                  "amount_g": 50
+                },
+                {
+                  "name": "Thịt bằm",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Hành lá",
+                  "amount_g": 10
+                }
+              ],
+              "nutrition": {
+                "calories": 350,
+                "macros": {
+                  "protein_g": 25,
+                  "carbs_g": 50,
+                  "fat_g": 5
+                }
+              }
+            },
+            "lunch": {
+              "description": "Bún bò Huế",
+              "ingredients": [
+                {
+                  "name": "Bún",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Thịt bò",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Nước dùng",
+                  "amount_g": 200
+                }
+              ],
+              "nutrition": {
+                "calories": 600,
+                "macros": {
+                  "protein_g": 30,
+                  "carbs_g": 80,
+                  "fat_g": 15
+                }
+              }
+            },
+            "dinner": {
+              "description": "Cá chiên",
+              "ingredients": [
+                {
+                  "name": "Cá",
+                  "amount_g": 150
+                },
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                },
+                {
+                  "name": "Rau xanh",
+                  "amount_g": 50
+                }
+              ],
+              "nutrition": {
+                "calories": 600,
+                "macros": {
+                  "protein_g": 40,
+                  "carbs_g": 70,
+                  "fat_g": 15
+                }
+              }
+            },
             "snacks": [
-              "Trail mix",
-              "Orange slices"
+              {
+                "description": "Hạt hướng dương",
+                "ingredients": [
+                  {
+                    "name": "Hạt hướng dương",
+                    "amount_g": 30
+                  }
+                ],
+                "nutrition": {
+                  "calories": 180,
+                  "macros": {
+                    "protein_g": 5,
+                    "carbs_g": 10,
+                    "fat_g": 15
+                  }
+                }
+              }
             ]
           },
           "day7": {
-            "breakfast": "Smoothie bowl with banana, spinach, and topped with nuts",
-            " lunch": "Quinoa and black bean salad with avocado",
-            "dinner": "Baked chicken thighs with roasted Brussels sprouts and carrots",
+            "breakfast": {
+              "description": "Bánh mì ốp la",
+              "ingredients": [
+                {
+                  "name": "Bánh mì",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Trứng gà",
+                  "amount_g": 50
+                },
+                {
+                  "name": "Rau sống",
+                  "amount_g": 30
+                }
+              ],
+              "nutrition": {
+                "calories": 400,
+                "macros": {
+                  "protein_g": 20,
+                  "carbs_g": 50,
+                  "fat_g": 15
+                }
+              }
+            },
+            "lunch": {
+              "description": "Cơm tấm sườn",
+              "ingredients": [
+                {
+                  "name": "Cơm trắng",
+                  "amount_g": 150
+                },
+                {
+                  "name": "Sườn nướng",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Rau sống",
+                  "amount_g": 50
+                }
+              ],
+              "nutrition": {
+                "calories": 700,
+                "macros": {
+                  "protein_g": 40,
+                  "carbs_g": 80,
+                  "fat_g": 20
+                }
+              }
+            },
+            "dinner": {
+              "description": "Mì xào hải sản",
+              "ingredients": [
+                {
+                  "name": "Mì",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Hải sản",
+                  "amount_g": 100
+                },
+                {
+                  "name": "Rau củ",
+                  "amount_g": 100
+                }
+              ],
+              "nutrition": {
+                "calories": 600,
+                "macros": {
+                  "protein_g": 30,
+                  "carbs_g": 80,
+                  "fat_g": 15
+                }
+              }
+            },
             "snacks": [
-              "Popcorn",
-              "Dark chocolate"
+              {
+                "description": "Trái cây tươi",
+                "ingredients": [
+                  {
+                    "name": "Cam",
+                    "amount_g": 100
+                  }
+                ],
+                "nutrition": {
+                  "calories": 50,
+                  "macros": {
+                    "protein_g": 1,
+                    "carbs_g": 14,
+                    "fat_g": 0
+                  }
+                }
+              }
             ]
           }
         },
-        "explanation": "Balanced meals focusing on lean proteins, whole grains, and plenty of fruits and vegetables to support overall health.",
-        "disclaimer": "This is general nutrition guidance, not medical advice."
+        "explanation": "Kế hoạch bữa ăn này được thiết kế để cung cấp đủ dinh dưỡng cho mục tiêu tăng cơ bắp của bạn, với các món ăn đơn giản và dễ chuẩn bị từ nguyên liệu phổ biến.",
+        "disclaimer": "Đây là hướng dẫn chung và không phải là lời khuyên y tế. Hãy tham khảo ý kiến chuyên gia y tế để có những khuyến nghị cá nhân hóa."
       },
-      "start_date": "2025-12-17",
-      "end_date": "2025-12-23"
+      "start_date": "2025-12-22",
+      "end_date": "2025-12-28"
     },
     "workout_plan": {
       "plan": {
         "weekly_schedule": {
           "Monday": {
-            "workout_type": "Upper Body",
+            "workout_type": "Strength Training",
             "exercises": [
               {
-                "name": "Bench Press",
+                "name": "Barbell Front Squat",
                 "sets": 3,
-                "reps": 8
-              },
-              {
-                "name": "Barbell Row",
-                "sets": 3,
-                "reps": 8
-              },
-              {
-                "name": "Seated Overhead Dumbbell Press",
-                "sets": 3,
-                "reps": 10
-              },
-              {
-                "name": "Pec Dec",
-                "sets": 2,
-                "reps": 10
-              },
-              {
-                "name": "V-Bar Lat Pull Down",
-                "sets": 2,
-                "reps": 10
-              },
-              {
-                "name": "Side Lateral Raise",
-                "sets": 2,
                 "reps": 12
               },
               {
-                "name": "Cable Tricep Extensions",
+                "name": "Barbell Romanian Deadlifts",
                 "sets": 3,
-                "reps": 10
+                "reps": 12
               },
               {
-                "name": "Cable Curls",
+                "name": "Dumbbell Lunges",
                 "sets": 3,
-                "reps": 10
+                "reps": 12
               }
             ]
           },
           "Tuesday": {
-            "workout_type": "Lower Body",
-            "exercises": [
-              {
-                "name": "Squats",
-                "sets": 3,
-                "reps": 8
-              },
-              {
-                "name": "Stiff Leg Deadlifts",
-                "sets": 3,
-                "reps": 10
-              },
-              {
-                "name": "Standing Calf Raise",
-                "sets": 3,
-                "reps": 12
-              },
-              {
-                "name": "Leg Extensions",
-                "sets": 2,
-                "reps": 10
-              },
-              {
-                "name": "Leg Curl",
-                "sets": 2,
-                "reps": 10
-              },
-              {
-                "name": "Seated Calf Raise",
-                "sets": 2,
-                "reps": 10
-              },
-              {
-                "name": "Cable Crunch",
-                "sets": 3,
-                "reps": 10
-              }
-            ]
+            "workout_type": "Rest",
+            "notes": "Nghỉ ngơi"
           },
           "Wednesday": {
-            "workout_type": "Rest",
-            "notes": "Focus on recovery and hydration."
-          },
-          "Thursday": {
-            "workout_type": "Upper Body",
+            "workout_type": "Strength Training",
             "exercises": [
               {
                 "name": "Incline Dumbbell Bench Press",
                 "sets": 3,
-                "reps": 8
+                "reps": 12
               },
               {
-                "name": "Military Press",
-                "sets": 3,
-                "reps": 10
-              },
-              {
-                "name": "Pull Ups or Machine Rows",
-                "sets": 2,
-                "reps": 8
-              },
-              {
-                "name": "Dumbbell Curls",
-                "sets": 3,
-                "reps": 10
-              },
-              {
-                "name": "Machine Tricep Dip",
-                "sets": 3,
-                "reps": 10
-              }
-            ]
-          },
-          "Friday": {
-            "workout_type": "Lower Body",
-            "exercises": [
-              {
-                "name": "Leg Press",
-                "sets": 3,
-                "reps": 10
-              },
-              {
-                "name": "Dumbbell Stiff Leg Deadlifts",
-                "sets": 3,
-                "reps": 10
-              },
-              {
-                "name": "Leg Press Calf Raise",
+                "name": "Barbell Rows",
                 "sets": 3,
                 "reps": 12
               },
               {
-                "name": "Hack Squat",
-                "sets": 2,
-                "reps": 10
+                "name": "Dumbbell Curls",
+                "sets": 3,
+                "reps": 12
+              }
+            ]
+          },
+          "Thursday": {
+            "workout_type": "Rest",
+            "notes": "Nghỉ ngơi"
+          },
+          "Friday": {
+            "workout_type": "Strength Training",
+            "exercises": [
+              {
+                "name": "Standing Overhead Press",
+                "sets": 3,
+                "reps": 12
               },
               {
-                "name": "Seated Leg Curl",
-                "sets": 2,
-                "reps": 10
+                "name": "Close Grip Bench Press",
+                "sets": 3,
+                "reps": 12
+              },
+              {
+                "name": "Seated Machine Fly",
+                "sets": 3,
+                "reps": 12
               }
             ]
           },
           "Saturday": {
             "workout_type": "Rest",
-            "notes": "Focus on stretching and light activity."
+            "notes": "Nghỉ ngơi"
           },
           "Sunday": {
-            "workout_type": "Rest",
-            "notes": "Prepare for the upcoming week."
+            "workout_type": "Strength Training",
+            "exercises": [
+              {
+                "name": "Barbell Snatch Grip Deadlift",
+                "sets": 3,
+                "reps": 12
+              },
+              {
+                "name": "Weighted Pull-ups",
+                "sets": 3,
+                "reps": 12
+              },
+              {
+                "name": "Seated Machine Reverse Fly",
+                "sets": 3,
+                "reps": 12
+              }
+            ]
           }
         },
-        "explanation": "This plan alternates upper and lower body workouts to promote hypertrophy while allowing adequate recovery.",
-        "disclaimer": "Consult a professional before starting a new exercise program."
+        "explanation": "Kế hoạch tập luyện này bao gồm các bài tập sức mạnh để phát triển cơ bắp, xen kẽ với các ngày nghỉ để phục hồi.",
+        "disclaimer": "Đây là hướng dẫn chung và không phải là lời khuyên y tế. Tham khảo ý kiến chuyên gia y tế để có khuyến nghị cá nhân hóa."
       },
       "start_date": "2025-12-22",
       "end_date": "2025-12-28"

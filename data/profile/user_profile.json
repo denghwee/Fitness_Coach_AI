@@ -7,5 +7,6 @@
   "goal": "hypertrophy",
   "available_days_per_week": 4,
   "session_duration_minutes": 60,
-  "injuries": []
+  "injuries": [],
+  "calorie_target": 2524
 }
