@@ -2,6 +2,7 @@ from datetime import date, timedelta
 import re
 import json
 from pathlib import Path
+from functools import lru_cache
 
 from app.agent.prompts import SYSTEM_PROMPT, MEAL_PLAN_PROMPT, WORKOUT_PROMPT
 from app.agent.validator import validate_json
@@ -12,7 +13,43 @@ from app.rag.qa import answer_query
 from app.rag.retriever import Retriever
 
 
-# ===== Helpers =====
+# =====================================================
+# CACHING
+# =====================================================
+
+@lru_cache(maxsize=1)
+def get_retriever():
+    """Singleton Retriever (vector store / embedding loaded once)"""
+    return Retriever()
+
+
+@lru_cache(maxsize=1)
+def load_profile_files():
+    """Load profile + skin ONCE from disk"""
+    base = Path.cwd() / "data" / "profile"
+    profile, skin = {}, {}
+
+    try:
+        p = base / "user_profile.json"
+        if p.exists():
+            profile = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        profile = {}
+
+    try:
+        s = base / "skin_analysis.json"
+        if s.exists():
+            skin = json.loads(s.read_text(encoding="utf-8"))
+    except Exception:
+        skin = {}
+
+    return profile, skin
+
+
+# =====================================================
+# Helpers
+# =====================================================
+
 def default_plan_window():
     start = date.today()
     end = start + timedelta(days=6)
@@ -20,10 +57,6 @@ def default_plan_window():
 
 
 def should_run_planner(message: str, state: dict) -> bool:
-    """Minimal heuristic: return True only when message likely requests planning.
-
-    Keep this light — used to avoid running the planner during normal chat.
-    """
     if not message:
         return False
     msg = message.lower()
@@ -35,18 +68,53 @@ def should_run_planner(message: str, state: dict) -> bool:
     if any(t in msg for t in triggers):
         return True
 
-    # If user asks to view a plan but none exists, allow planner to run (to offer creation)
     view_words = ["show", "xem", "cho tôi", "hiện"]
     meal_words = ["meal", "bữa", "ăn"]
     workout_words = ["workout", "tập"]
-    if any(v in msg for v in view_words) and (any(m in msg for m in meal_words) or any(w in msg for w in workout_words)):
+
+    if any(v in msg for v in view_words) and (
+        any(m in msg for m in meal_words) or any(w in msg for w in workout_words)
+    ):
         if not (is_plan_active(state, "meal_plan") or is_plan_active(state, "workout_plan")):
             return True
 
     return False
 
 
-# ===== Chat entry =====
+def _looks_like_question(msg: str) -> bool:
+    if not msg:
+        return False
+    m = msg.strip().lower()
+    if m.endswith("?"):
+        return True
+    qwords = [
+        "who", "what", "when", "where", "why", "how",
+        "làm sao", "cách", "tại sao", "gì", "ai", "ở đâu"
+    ]
+    if any(m.startswith(w) for w in qwords):
+        return True
+    if any(w in m for w in ["?", "làm sao", "cách", "tại sao"]):
+        return True
+    return False
+
+
+def _safe_parse_json(text: str, required_keys):
+    try:
+        return validate_json(text, required_keys)
+    except Exception:
+        m = re.search(r"\{[\s\S]*\}", str(text))
+        if m:
+            try:
+                return validate_json(m.group(0), required_keys)
+            except Exception:
+                return None
+    return None
+
+
+# =====================================================
+# Chat entry
+# =====================================================
+
 def handle_chat(llm, user_id: str, message: str):
     # 1. Safety gate
     safety = run_safety_check(llm, message)
@@ -62,11 +130,10 @@ def handle_chat(llm, user_id: str, message: str):
             "decision": "answer"
         }
 
-    # 2. Load memory
+    # 2. Load state ONCE
     state = get_user_state(user_id)
-
-    # Quick check: if user asks about their meal or workout plan, return stored plan if active
     msg_l = (message or "").lower()
+
     meal_keywords = ["meal", "meal plan", "bữa", "bữa ăn", "kế hoạch ăn", "ăn uống", "mealplan"]
     workout_keywords = ["workout", "exercise", "work out", "tập", "tập luyện", "bài tập"]
 
@@ -88,25 +155,12 @@ def handle_chat(llm, user_id: str, message: str):
             "decision": "use_existing"
         }
 
-    # 3. Planner reasoning (minimal gating)
+    # 3. Planner reasoning
     if should_run_planner(message, state):
         plan = run_planner(llm, message, state)
         intent = plan.get("intent")
         decision = plan.get("decision")
-    else: # General conversation
-        def _looks_like_question(msg: str) -> bool:
-            if not msg:
-                return False
-            m = msg.strip().lower()
-            if m.endswith("?"):
-                return True
-            qwords = ["who", "what", "when", "where", "why", "how", "làm sao", "cách", "tại sao", "gì", "ai", "ở đâu"]
-            if any(m.startswith(w) for w in qwords):
-                return True
-            if any(w in m for w in ["?", "làm sao", "cách", "tại sao"]):
-                return True
-            return False
-
+    else:
         if _looks_like_question(message):
             try:
                 rag = answer_query(message, user_profile=state.get("profile"), k=5)
@@ -118,27 +172,17 @@ def handle_chat(llm, user_id: str, message: str):
                     "decision": "answer"
                 }
             except Exception:
-                # fallback to direct LLM chat if RAG fails
-                response = llm.chat(SYSTEM_PROMPT, message)
-                return {
-                    "type": "message",
-                    "message": response,
-                    "intent": "general",
-                    "decision": "answer"
-                }
+                pass
 
-        # Not a question — regular chat
-        response = llm.chat(SYSTEM_PROMPT, message)
         return {
             "type": "message",
-            "message": response,
+            "message": llm.chat(SYSTEM_PROMPT, message),
             "intent": "general",
             "decision": "answer"
         }
 
     # ===== MEAL PLAN FLOW =====
     if intent == "meal":
-        # If there is any active meal plan in memory, always return it first.
         if is_plan_active(state, "meal_plan"):
             return {
                 "type": "message",
@@ -148,217 +192,184 @@ def handle_chat(llm, user_id: str, message: str):
                 "decision": "use_existing"
             }
 
-        # No active plan -> suggest creation to the user
         return {
             "type": "action_required",
             "message": "You don`t have an active meal plan. Do you want me to create one?",
-            "actions": [
-                {"label": "Create meal plan", "action": "create_meal_plan"}
-            ],
+            "actions": [{"label": "Create meal plan", "action": "create_meal_plan"}],
             "intent": "meal",
             "decision": "ask_create"
         }
 
     # ===== WORKOUT PLAN FLOW =====
     if intent == "workout":
-        if decision == "use_existing" and is_plan_active(state, "workout_plan"):
-            return {
-                "type": "message",
-                "message": "Here is your current workout plan for this week.",
-                "plan": state["workout_plan"]["plan"],
-                "intent": intent,
-                "decision": decision
-            }
-
-        if decision in ("ask_create", "create_new"):
-            return {
-                "type": "action_required",
-                "message": "You don`t have an active workout plan. Do you want me to create one?",
-                "actions": [
-                    {"label": "Create workout plan", "action": "create_workout_plan"}
-                ],
-                "intent": intent,
-                "decision": decision
-            }
+        return {
+            "type": "action_required",
+            "message": "You don`t have an active workout plan. Do you want me to create one?",
+            "actions": [{"label": "Create workout plan", "action": "create_workout_plan"}],
+            "intent": "workout",
+            "decision": "ask_create"
+        }
 
 
-# ===== Explicit actions (buttons) =====
+# =====================================================
+# Explicit actions (BUTTONS)
+# =====================================================
+
 def create_meal_plan(llm, user_id: str):
-    # Load user profile data (if available) and include in prompt so plan is tailored
-
-    profile_path = Path.cwd() / "data" / "profile" / "user_profile.json"
-    skin_path = Path.cwd() / "data" / "profile" / "skin_analysis.json"
-    profile = {}
-    skin = {}
-    try:
-        if profile_path.exists():
-            with open(profile_path, "r", encoding="utf-8") as f:
-                profile = json.load(f)
-    except Exception:
-        profile = {}
-
-    try:
-        if skin_path.exists():
-            with open(skin_path, "r", encoding="utf-8") as f:
-                skin = json.load(f)
-    except Exception:
-        skin = {}
-
+    profile, skin = load_profile_files()
     state = get_user_state(user_id)
-    # allow user-provided goals in state under 'goals'
     goals = state.get("goals")
 
-    profile_text = json.dumps({"profile": profile, "skin": skin, "goals": goals}, ensure_ascii=False)
+    medical_conditions = (
+        state.get("medical_conditions")
+        or profile.get("medical_conditions")
+        or state.get("conditions")
+        or profile.get("conditions")
+        or []
+    )
+    if isinstance(medical_conditions, str):
+        medical_conditions = [medical_conditions]
 
-    # Retrieve relevant RAG documents (nutrition, recipes, guidelines)
+    locale = profile.get("locale") or profile.get("language") or state.get("locale")
+    filters = {"locale": "vi"} if isinstance(locale, str) and locale.lower().startswith("vi") else None
+
+    retriever = get_retriever()
+
     try:
-        retriever = Retriever()
+        mc_text = ",".join(medical_conditions) if medical_conditions else "none"
         expanded_q = (
-            f"meal plan guidelines diet={profile.get('diet')} calories={profile.get('calorie_target')} goals={goals} "
-            f"equipment={profile.get('equipment')}"
+            f"meal plan guidance Vietnamese_cuisine={'yes' if filters else 'no'} "
+            f"medical_conditions={mc_text} diet={profile.get('diet')} "
+            f"calories={profile.get('calorie_target')} goals={goals}"
         )
-        docs = retriever.retrieve(expanded_q, k=6)
-        context = "\n\n".join(f"[{d['metadata'].get('source')}]\n{d['page_content']}" for d in docs)
+        docs = retriever.retrieve(expanded_q, k=8, filters=filters)
+        context = "\n\n".join(
+            f"[{d['metadata'].get('source')}]\n{d['page_content']}" for d in docs
+        )
     except Exception:
         context = ""
 
-    prompt = MEAL_PLAN_PROMPT + "\n\nContext:\n" + context + "\n\nUser profile: " + profile_text
+    prompt = (
+        MEAL_PLAN_PROMPT
+        + "\n\nContext:\n" + context
+        + "\n\nUser profile: "
+        + json.dumps({"profile": profile, "skin": skin, "goals": goals}, ensure_ascii=False)
+        + "\n\nUser metadata: "
+        + json.dumps(
+            {"locale": locale, "medical_conditions": medical_conditions, "goals": goals},
+            ensure_ascii=False
+        )
+    )
+
     plan_text = llm.chat(SYSTEM_PROMPT, prompt)
 
-    required = ["daily_meals", "explanation", "disclaimer"]
+    plan = _safe_parse_json(plan_text, ["daily_meals", "explanation", "disclaimer"])
 
-    def _try_parse(text):
-        try:
-            return validate_json(text, required)
-        except ValueError:
-            return None
-
-    # 1) direct parse
-    plan = _try_parse(plan_text)
-
-    # 2) extract JSON substring
-    if not plan:
-        m = re.search(r"\{[\s\S]*\}", str(plan_text))
-        if m:
-            plan = _try_parse(m.group(0))
-
-    # 3) ask model to reformat up to 2 times
+    # Reformat retry
     attempts = 0
     while not plan and attempts < 2:
         attempts += 1
-        formatter_prompt = (
-            "The previous assistant output did not follow the required JSON schema.\n"
-            "Please convert the following output into a JSON object that contains the keys: \"daily_meals\", \"explanation\", \"disclaimer\".\n"
-            "Return only the JSON object with those keys and nothing else.\n\n"
-            f"Previous output:\n{plan_text}\n"
+        reformatted = llm.chat(
+            SYSTEM_PROMPT,
+            (
+                "Please convert the following output into a JSON object with keys "
+                "\"daily_meals\", \"explanation\", \"disclaimer\". Return JSON only.\n\n"
+                f"{plan_text}"
+            )
         )
-        reformatted = llm.chat(SYSTEM_PROMPT, formatter_prompt)
-        plan = _try_parse(reformatted)
+        plan = _safe_parse_json(reformatted, ["daily_meals", "explanation", "disclaimer"])
 
     if not plan:
-        # persist raw LLM output for debugging
-        log_dir = Path.cwd() / "data"
-        log_dir.mkdir(parents=True, exist_ok=True)
-        log_path = log_dir / "llm_failures.log"
-        try:
-            with open(log_path, "a", encoding="utf-8") as lf:
-                lf.write("--- MEAL PLAN FAILURE ---\n")
-                lf.write(str(plan_text) + "\n\n")
-        except Exception:
-            log_path = None
+        return {"type": "error", "message": "Failed to parse meal plan"}
 
-        return {
-            "type": "error",
-            "message": "Failed to parse meal plan from LLM output",
-            "raw": str(plan_text),
-            "log": str(log_path) if log_path else None,
-        }
+    # ===== Calorie adjust =====
+    def _day_total(day_obj: dict) -> float:
+        total = 0.0
+        for k in ("breakfast", "lunch", "dinner"):
+            m = day_obj.get(k)
+            if m:
+                total += float(m.get("nutrition", {}).get("calories", 0) or 0)
+        for s in day_obj.get("snacks") or []:
+            total += float(s.get("nutrition", {}).get("calories", 0) or 0)
+        return total
+
+    calorie_target = profile.get("calorie_target")
+    try:
+        ct = float(calorie_target) if calorie_target else None
+    except Exception:
+        ct = None
+
+    warning = None
+    if ct:
+        bad_days = []
+        for day, obj in plan["daily_meals"].items():
+            tot = _day_total(obj)
+            if tot == 0 or abs(tot - ct) > ct * 0.05:
+                bad_days.append(day)
+
+        if bad_days:
+            warning = "Calories may not exactly match target for days: " + ", ".join(bad_days)
 
     start, end = default_plan_window()
     save_plan(user_id, "meal_plan", plan, start, end)
 
-    return {
+    resp = {
         "type": "plan_created",
-        "message": "New meal plan has been created for this week (tailored to user profile).",
+        "message": "New meal plan has been created for this week.",
         "plan": plan
     }
+    if warning:
+        resp["warning"] = warning
+
+    return resp
 
 
 def create_workout_plan(llm, user_id: str):
-    # Load user profile and include in prompt to tailor workout
-    import json
-    from pathlib import Path
-
-    profile_path = Path.cwd() / "data" / "profile" / "user_profile.json"
-    profile = {}
-    try:
-        if profile_path.exists():
-            with open(profile_path, "r", encoding="utf-8") as f:
-                profile = json.load(f)
-    except Exception:
-        profile = {}
-
+    profile, _ = load_profile_files()
     state = get_user_state(user_id)
     goals = state.get("goals")
-    profile_text = json.dumps({"profile": profile, "goals": goals}, ensure_ascii=False)
 
-    # Retrieve relevant RAG documents (workout plans, progressions, safety)
+    retriever = get_retriever()
+
     try:
-        retriever = Retriever()
         expanded_q = (
-            f"workout plan guidance goals={goals} equipment={profile.get('equipment')} profile={profile}"
+            f"workout plan guidance goals={goals} equipment={profile.get('equipment')}"
         )
         docs = retriever.retrieve(expanded_q, k=6)
-        context = "\n\n".join(f"[{d['metadata'].get('source')}]\n{d['page_content']}" for d in docs)
+        context = "\n\n".join(
+            f"[{d['metadata'].get('source')}]\n{d['page_content']}" for d in docs
+        )
     except Exception:
         context = ""
 
-    prompt = WORKOUT_PROMPT + "\n\nContext:\n" + context + "\n\nUser profile: " + profile_text
+    prompt = (
+        WORKOUT_PROMPT
+        + "\n\nContext:\n" + context
+        + "\n\nUser profile: "
+        + json.dumps({"profile": profile, "goals": goals}, ensure_ascii=False)
+    )
+
     plan_text = llm.chat(SYSTEM_PROMPT, prompt)
 
-    required = ["weekly_schedule", "explanation", "disclaimer"]
-
-    def _try_parse_workout(text):
-        try:
-            return validate_json(text, required)
-        except ValueError:
-            return None
-
-    plan = _try_parse_workout(plan_text)
-    if not plan:
-        m = re.search(r"\{[\s\S]*\}", str(plan_text))
-        if m:
-            plan = _try_parse_workout(m.group(0))
+    plan = _safe_parse_json(plan_text, ["weekly_schedule", "explanation", "disclaimer"])
 
     attempts = 0
     while not plan and attempts < 2:
         attempts += 1
-        formatter_prompt = (
-            "The previous assistant output did not follow the required JSON schema.\n"
-            "Please convert the following output into a JSON object that contains the keys: \"weekly_schedule\", \"explanation\", \"disclaimer\".\n"
-            "Return only the JSON object with those keys and nothing else.\n\n"
-            f"Previous output:\n{plan_text}\n"
+        reformatted = llm.chat(
+            SYSTEM_PROMPT,
+            (
+                "Please convert the following output into a JSON object with keys "
+                "\"weekly_schedule\", \"explanation\", \"disclaimer\". Return JSON only.\n\n"
+                f"{plan_text}"
+            )
         )
-        reformatted = llm.chat(SYSTEM_PROMPT, formatter_prompt)
-        plan = _try_parse_workout(reformatted)
+        plan = _safe_parse_json(
+            reformatted, ["weekly_schedule", "explanation", "disclaimer"]
+        )
 
     if not plan:
-        log_dir = Path.cwd() / "data"
-        log_dir.mkdir(parents=True, exist_ok=True)
-        log_path = log_dir / "llm_failures.log"
-        try:
-            with open(log_path, "a", encoding="utf-8") as lf:
-                lf.write("--- WORKOUT PLAN FAILURE ---\n")
-                lf.write(str(plan_text) + "\n\n")
-        except Exception:
-            log_path = None
-
-        return {
-            "type": "error",
-            "message": "Failed to parse workout plan from LLM output",
-            "raw": str(plan_text),
-            "log": str(log_path) if log_path else None,
-        }
+        return {"type": "error", "message": "Failed to parse workout plan"}
 
     start, end = default_plan_window()
     save_plan(user_id, "workout_plan", plan, start, end)
