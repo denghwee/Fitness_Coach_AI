@@ -7,7 +7,7 @@ load_dotenv()
 class Config:
     # ===== APP =====
     FLASK_ENV = os.getenv("FLASK_ENV", "development")
-    FLASK_PORT = int(os.getenv("FLASK_PORT", 5001))
+    FLASK_PORT = int(os.getenv("FLASK_PORT", 5003))
     DEBUG = FLASK_ENV == "development"
 
     # ===== PATHS =====

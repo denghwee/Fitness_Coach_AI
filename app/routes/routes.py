@@ -7,7 +7,7 @@ from app.agent import (
 from app.llm import get_llm
 from app.memory.store import get_user_state
 
-agent_bp = Blueprint("agent", __name__, url_prefix="/agent")
+agent_bp = Blueprint("agent", __name__, url_prefix="/api/v3/agent")
 llm = get_llm()
 
 
