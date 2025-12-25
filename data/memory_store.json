@@ -792,5 +792,147 @@
       "start_date": "2025-12-22",
       "end_date": "2025-12-28"
     }
+  },
+  "2": {
+    "workout_plan": {
+      "plan": {
+        "weekly_schedule": {
+          "Monday": {
+            "workout_type": "Strength Training",
+            "exercises": [
+              {
+                "name": "Barbell Squats",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Bench Press",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Bent Over Rows",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Planks",
+                "sets": 3,
+                "reps": 60
+              }
+            ]
+          },
+          "Tuesday": {
+            "workout_type": "Cardio",
+            "exercises": [
+              {
+                "name": "Chạy bộ",
+                "duration": "30 phút"
+              },
+              {
+                "name": "Đạp xe",
+                "duration": "30 phút"
+              }
+            ]
+          },
+          "Wednesday": {
+            "workout_type": "Strength Training",
+            "exercises": [
+              {
+                "name": "Deadlifts",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Shoulder Press",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Pull-Ups",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Dumbbell Curls",
+                "sets": 3,
+                "reps": 10
+              }
+            ]
+          },
+          "Thursday": {
+            "workout_type": "Rest",
+            "notes": "Ngày nghỉ ngơi để phục hồi."
+          },
+          "Friday": {
+            "workout_type": "Strength Training",
+            "exercises": [
+              {
+                "name": "Leg Press",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Chest Fly",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Seated Rows",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Tricep Dips",
+                "sets": 3,
+                "reps": 10
+              }
+            ]
+          },
+          "Saturday": {
+            "workout_type": "Cardio",
+            "exercises": [
+              {
+                "name": "Bơi lội",
+                "duration": "30 phút"
+              },
+              {
+                "name": "Nhảy dây",
+                "duration": "15 phút"
+              }
+            ]
+          },
+          "Sunday": {
+            "workout_type": "Strength Training",
+            "exercises": [
+              {
+                "name": "Leg Curls",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Incline Dumbbell Press",
+                "sets": 4,
+                "reps": 8
+              },
+              {
+                "name": "Lateral Raises",
+                "sets": 3,
+                "reps": 10
+              },
+              {
+                "name": "Russian Twists",
+                "sets": 3,
+                "reps": 15
+              }
+            ]
+          }
+        },
+        "explanation": "Kế hoạch tập luyện kết hợp giữa sức mạnh và cardio để duy trì thể lực.",
+        "disclaimer": "Đây là hướng dẫn chung và không phải là lời khuyên y tế. Tham khảo ý kiến chuyên gia y tế để có khuyến nghị cá nhân hóa."
+      },
+      "start_date": "2025-12-25",
+      "end_date": "2025-12-31"
+    }
   }
 }

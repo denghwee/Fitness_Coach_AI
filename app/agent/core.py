@@ -3,6 +3,7 @@ import re
 import json
 from pathlib import Path
 from functools import lru_cache
+from typing import Any
 
 from app.agent.prompts import SYSTEM_PROMPT, MEAL_PLAN_PROMPT, WORKOUT_PROMPT
 from app.agent.validator import validate_json
@@ -324,35 +325,66 @@ def create_meal_plan(llm, user_id: str):
     return resp
 
 
-def create_workout_plan(llm, user_id: str):
-    profile, _ = load_profile_files()
+def create_workout_plan(llm, user_id: str, profile: Any):
+    """
+    profile: AIProfileInputDTO
+    """
+
     state = get_user_state(user_id)
     goals = state.get("goals")
 
     retriever = get_retriever()
 
+    # ===== RAG CONTEXT =====
     try:
         expanded_q = (
-            f"workout plan guidance goals={goals} equipment={profile.get('equipment')}"
+            f"workout plan guidance "
+            f"experience={profile.experience_level} "
+            f"goal={profile.goal} "
+            f"days={profile.available_days_per_week}"
         )
+
         docs = retriever.retrieve(expanded_q, k=6)
+
         context = "\n\n".join(
-            f"[{d['metadata'].get('source')}]\n{d['page_content']}" for d in docs
+            f"[{d['metadata'].get('source')}]\n{d['page_content']}"
+            for d in docs
         )
     except Exception:
         context = ""
 
+    # ===== PROMPT =====
     prompt = (
         WORKOUT_PROMPT
         + "\n\nContext:\n" + context
-        + "\n\nUser profile: "
-        + json.dumps({"profile": profile, "goals": goals}, ensure_ascii=False)
+        + "\n\nUser profile:\n"
+        + json.dumps(
+            {
+                "age": profile.age,
+                "gender": profile.gender,
+                "height_cm": profile.height_cm,
+                "weight_kg": profile.weight_kg,
+                "experience_level": profile.experience_level,
+                "goal": profile.goal,
+                "available_days_per_week": profile.available_days_per_week,
+                "session_duration_minutes": profile.session_duration_minutes,
+                "injuries": profile.injuries,
+                "calorie_target": profile.calorie_target,
+                "goals": goals
+            },
+            ensure_ascii=False
+        )
     )
 
+    # ===== LLM CALL =====
     plan_text = llm.chat(SYSTEM_PROMPT, prompt)
 
-    plan = _safe_parse_json(plan_text, ["weekly_schedule", "explanation", "disclaimer"])
+    plan = _safe_parse_json(
+        plan_text,
+        ["weekly_schedule", "explanation", "disclaimer"]
+    )
 
+    # ===== RETRY JSON PARSE =====
     attempts = 0
     while not plan and attempts < 2:
         attempts += 1
@@ -360,17 +392,24 @@ def create_workout_plan(llm, user_id: str):
             SYSTEM_PROMPT,
             (
                 "Please convert the following output into a JSON object with keys "
-                "\"weekly_schedule\", \"explanation\", \"disclaimer\". Return JSON only.\n\n"
+                "\"weekly_schedule\", \"explanation\", \"disclaimer\". "
+                "Return JSON only.\n\n"
                 f"{plan_text}"
             )
         )
+
         plan = _safe_parse_json(
-            reformatted, ["weekly_schedule", "explanation", "disclaimer"]
+            reformatted,
+            ["weekly_schedule", "explanation", "disclaimer"]
         )
 
     if not plan:
-        return {"type": "error", "message": "Failed to parse workout plan"}
+        return {
+            "type": "error",
+            "message": "Failed to parse workout plan"
+        }
 
+    # ===== SAVE PLAN =====
     start, end = default_plan_window()
     save_plan(user_id, "workout_plan", plan, start, end)
 

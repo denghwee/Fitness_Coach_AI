@@ -34,3 +34,12 @@ class Config:
 
     # ===== AGENT SETTINGS =====
     DEFAULT_TEMPERATURE = float(os.getenv("DEFAULT_TEMPERATURE", 0.3))
+    # JWT
+    SECRET_KEY = "kfhsk3jh2k3hk2h3k2h3k2h3h23jh23j423423"
+    JWT_SECRET_KEY = "Some_super_secure_and_long_base64_encoded_secret_key_for_JSWT123"
+    JWT_ALGORITHM = "HS256"
+    JWT_TOKEN_LOCATION = ["headers"]
+    JWT_HEADER_NAME = "Authorization"
+    JWT_HEADER_TYPE = "Bearer"
+
+    JWT_ACCESS_TOKEN_EXPIRES = False
