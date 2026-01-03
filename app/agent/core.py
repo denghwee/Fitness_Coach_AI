@@ -57,48 +57,6 @@ def default_plan_window():
     return start, end
 
 
-def should_run_planner(message: str, state: dict) -> bool:
-    if not message:
-        return False
-    msg = message.lower()
-
-    triggers = [
-        "plan", "kế hoạch", "meal plan", "workout plan", "tạo", "create", "generate",
-        "recommend", "gợi ý", "lên kế hoạch", "cần", "muốn"
-    ]
-    if any(t in msg for t in triggers):
-        return True
-
-    view_words = ["show", "xem", "cho tôi", "hiện"]
-    meal_words = ["meal", "bữa", "ăn"]
-    workout_words = ["workout", "tập"]
-
-    if any(v in msg for v in view_words) and (
-        any(m in msg for m in meal_words) or any(w in msg for w in workout_words)
-    ):
-        if not (is_plan_active(state, "meal_plan") or is_plan_active(state, "workout_plan")):
-            return True
-
-    return False
-
-
-def _looks_like_question(msg: str) -> bool:
-    if not msg:
-        return False
-    m = msg.strip().lower()
-    if m.endswith("?"):
-        return True
-    qwords = [
-        "who", "what", "when", "where", "why", "how",
-        "làm sao", "cách", "tại sao", "gì", "ai", "ở đâu"
-    ]
-    if any(m.startswith(w) for w in qwords):
-        return True
-    if any(w in m for w in ["?", "làm sao", "cách", "tại sao"]):
-        return True
-    return False
-
-
 def _safe_parse_json(text: str, required_keys):
     try:
         return validate_json(text, required_keys)
@@ -117,99 +75,37 @@ def _safe_parse_json(text: str, required_keys):
 # =====================================================
 
 def handle_chat(llm, user_id: str, message: str):
-    # 1. Safety gate
+    # 1. Safety (giữ lại)
     safety = run_safety_check(llm, message)
     if not safety["safe"]:
         return {
             "type": "message",
             "message": (
-                "I can`t help with medical diagnosis or treatment. "
-                "Please consult a healthcare professional."
+                "Tôi không thể hỗ trợ chẩn đoán hay điều trị y tế. "
+                "Vui lòng liên hệ chuyên gia y tế."
             ),
-            "disclaimer": "This is not medical advice.",
-            "intent": "general",
-            "decision": "answer"
+            "intent": "safety",
+            "decision": "refuse"
         }
 
-    # 2. Load state ONCE
+    # 2. Load state
     state = get_user_state(user_id)
-    msg_l = (message or "").lower()
+    workout_plan = state.get("workout_plan")
 
-    meal_keywords = ["meal", "meal plan", "bữa", "bữa ăn", "kế hoạch ăn", "ăn uống", "mealplan"]
-    workout_keywords = ["workout", "exercise", "work out", "tập", "tập luyện", "bài tập"]
+    # 3. Prompt-driven Q&A (KHÔNG IF/ELSE intent)
+    prompt_input = {
+        "workout_plan": workout_plan,
+        "user_question": message
+    }
 
-    if is_plan_active(state, "meal_plan") and any(k in msg_l for k in meal_keywords):
-        return {
-            "type": "message",
-            "message": "Here is your current meal plan for this week.",
-            "plan": state["meal_plan"]["plan"],
-            "intent": "meal",
-            "decision": "use_existing"
-        }
+    answer = llm.chat(SYSTEM_PROMPT, json.dumps(prompt_input, ensure_ascii=False))
 
-    if is_plan_active(state, "workout_plan") and any(k in msg_l for k in workout_keywords):
-        return {
-            "type": "message",
-            "message": "Here is your current workout plan for this week.",
-            "plan": state["workout_plan"]["plan"],
-            "intent": "workout",
-            "decision": "use_existing"
-        }
-
-    # 3. Planner reasoning
-    if should_run_planner(message, state):
-        plan = run_planner(llm, message, state)
-        intent = plan.get("intent")
-        decision = plan.get("decision")
-    else:
-        if _looks_like_question(message):
-            try:
-                rag = answer_query(message, user_profile=state.get("profile"), k=5)
-                return {
-                    "type": "message",
-                    "message": rag.get("answer") or "",
-                    "sources": rag.get("sources", []),
-                    "intent": "rag",
-                    "decision": "answer"
-                }
-            except Exception:
-                pass
-
-        return {
-            "type": "message",
-            "message": llm.chat(SYSTEM_PROMPT, message),
-            "intent": "general",
-            "decision": "answer"
-        }
-
-    # ===== MEAL PLAN FLOW =====
-    if intent == "meal":
-        if is_plan_active(state, "meal_plan"):
-            return {
-                "type": "message",
-                "message": "Here is your current meal plan for this week.",
-                "plan": state["meal_plan"]["plan"],
-                "intent": "meal",
-                "decision": "use_existing"
-            }
-
-        return {
-            "type": "action_required",
-            "message": "You don`t have an active meal plan. Do you want me to create one?",
-            "actions": [{"label": "Create meal plan", "action": "create_meal_plan"}],
-            "intent": "meal",
-            "decision": "ask_create"
-        }
-
-    # ===== WORKOUT PLAN FLOW =====
-    if intent == "workout":
-        return {
-            "type": "action_required",
-            "message": "You don`t have an active workout plan. Do you want me to create one?",
-            "actions": [{"label": "Create workout plan", "action": "create_workout_plan"}],
-            "intent": "workout",
-            "decision": "ask_create"
-        }
+    return {
+        "type": "message",
+        "message": answer,
+        "intent": "workout_qa",
+        "decision": "answer"
+    }
 
 
 # =====================================================

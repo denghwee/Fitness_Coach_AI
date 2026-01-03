@@ -814,11 +814,6 @@
                 "name": "Bent Over Rows",
                 "sets": 4,
                 "reps": 8
-              },
-              {
-                "name": "Planks",
-                "sets": 3,
-                "reps": 60
               }
             ]
           },
@@ -826,12 +821,12 @@
             "workout_type": "Cardio",
             "exercises": [
               {
-                "name": "Chạy bộ",
-                "duration": "30 phút"
+                "name": "Running",
+                "duration": "30 minutes"
               },
               {
-                "name": "Đạp xe",
-                "duration": "30 phút"
+                "name": "Cycling",
+                "duration": "30 minutes"
               }
             ]
           },
@@ -844,7 +839,7 @@
                 "reps": 8
               },
               {
-                "name": "Shoulder Press",
+                "name": "Overhead Press",
                 "sets": 4,
                 "reps": 8
               },
@@ -852,17 +847,12 @@
                 "name": "Pull-Ups",
                 "sets": 4,
                 "reps": 8
-              },
-              {
-                "name": "Dumbbell Curls",
-                "sets": 3,
-                "reps": 10
               }
             ]
           },
           "Thursday": {
             "workout_type": "Rest",
-            "notes": "Ngày nghỉ ngơi để phục hồi."
+            "notes": "Recovery day, focus on stretching and hydration."
           },
           "Friday": {
             "workout_type": "Strength Training",
@@ -873,19 +863,14 @@
                 "reps": 8
               },
               {
-                "name": "Chest Fly",
-                "sets": 4,
-                "reps": 8
-              },
-              {
-                "name": "Seated Rows",
+                "name": "Dumbbell Curls",
                 "sets": 4,
                 "reps": 8
               },
               {
                 "name": "Tricep Dips",
-                "sets": 3,
-                "reps": 10
+                "sets": 4,
+                "reps": 8
               }
             ]
           },
@@ -893,46 +878,25 @@
             "workout_type": "Cardio",
             "exercises": [
               {
-                "name": "Bơi lội",
-                "duration": "30 phút"
+                "name": "Swimming",
+                "duration": "30 minutes"
               },
               {
-                "name": "Nhảy dây",
-                "duration": "15 phút"
+                "name": "HIIT",
+                "duration": "30 minutes"
               }
             ]
           },
           "Sunday": {
-            "workout_type": "Strength Training",
-            "exercises": [
-              {
-                "name": "Leg Curls",
-                "sets": 4,
-                "reps": 8
-              },
-              {
-                "name": "Incline Dumbbell Press",
-                "sets": 4,
-                "reps": 8
-              },
-              {
-                "name": "Lateral Raises",
-                "sets": 3,
-                "reps": 10
-              },
-              {
-                "name": "Russian Twists",
-                "sets": 3,
-                "reps": 15
-              }
-            ]
+            "workout_type": "Rest",
+            "notes": "Recovery day, focus on light activities and relaxation."
           }
         },
-        "explanation": "Kế hoạch tập luyện kết hợp giữa sức mạnh và cardio để duy trì thể lực.",
-        "disclaimer": "Đây là hướng dẫn chung và không phải là lời khuyên y tế. Tham khảo ý kiến chuyên gia y tế để có khuyến nghị cá nhân hóa."
+        "explanation": "Kế hoạch kết hợp giữa tập sức mạnh và cardio để duy trì thể lực.",
+        "disclaimer": "Tư vấn chuyên môn trước khi bắt đầu chương trình tập luyện mới."
       },
-      "start_date": "2025-12-25",
-      "end_date": "2025-12-31"
+      "start_date": "2026-01-03",
+      "end_date": "2026-01-09"
     }
   },
   "2": {
@@ -956,11 +920,6 @@
                 "name": "Bent Over Rows",
                 "sets": 4,
                 "reps": 8
-              },
-              {
-                "name": "Plank",
-                "sets": 3,
-                "reps": 60
               }
             ]
           },
@@ -968,12 +927,12 @@
             "workout_type": "Cardio",
             "exercises": [
               {
-                "name": "Chạy bộ",
-                "duration": "45 phút"
+                "name": "Running",
+                "duration": "30 minutes"
               },
               {
-                "name": "Đạp xe",
-                "duration": "30 phút"
+                "name": "Cycling",
+                "duration": "30 minutes"
               }
             ]
           },
@@ -994,17 +953,12 @@
                 "name": "Pull-Ups",
                 "sets": 4,
                 "reps": 8
-              },
-              {
-                "name": "Hanging Leg Raises",
-                "sets": 3,
-                "reps": 12
               }
             ]
           },
           "Thursday": {
             "workout_type": "Rest",
-            "notes": "Ngày nghỉ để phục hồi"
+            "notes": "Recovery day, focus on stretching and hydration."
           },
           "Friday": {
             "workout_type": "Strength Training",
@@ -1015,19 +969,14 @@
                 "reps": 8
               },
               {
-                "name": "Incline Dumbbell Press",
+                "name": "Dumbbell Curls",
                 "sets": 4,
-                "reps": 8
+                "reps": 10
               },
               {
-                "name": "Seated Rows",
+                "name": "Tricep Dips",
                 "sets": 4,
-                "reps": 8
-              },
-              {
-                "name": "Russian Twists",
-                "sets": 3,
-                "reps": 15
+                "reps": 10
               }
             ]
           },
@@ -1035,46 +984,25 @@
             "workout_type": "Cardio",
             "exercises": [
               {
-                "name": "Bơi lội",
-                "duration": "45 phút"
+                "name": "Swimming",
+                "duration": "30 minutes"
               },
               {
-                "name": "Nhảy dây",
-                "duration": "15 phút"
+                "name": "HIIT",
+                "duration": "30 minutes"
               }
             ]
           },
           "Sunday": {
-            "workout_type": "Strength Training",
-            "exercises": [
-              {
-                "name": "Lunges",
-                "sets": 4,
-                "reps": 8
-              },
-              {
-                "name": "Dumbbell Flyes",
-                "sets": 4,
-                "reps": 8
-              },
-              {
-                "name": "Tricep Dips",
-                "sets": 4,
-                "reps": 8
-              },
-              {
-                "name": "Plank",
-                "sets": 3,
-                "reps": 60
-              }
-            ]
+            "workout_type": "Rest",
+            "notes": "Recovery day, focus on light activities and mobility."
           }
         },
-        "explanation": "Kế hoạch tập luyện này kết hợp giữa tập sức mạnh và cardio để duy trì sức khỏe và thể lực.",
-        "disclaimer": "Đây là hướng dẫn chung và không phải là lời khuyên y tế. Tham khảo ý kiến chuyên gia y tế để có những khuyến nghị cá nhân hóa."
+        "explanation": "Kế hoạch tập luyện kết hợp giữa sức mạnh và cardio để duy trì thể lực.",
+        "disclaimer": "Tham khảo ý kiến chuyên gia trước khi bắt đầu chương trình tập luyện mới."
       },
-      "start_date": "2026-01-02",
-      "end_date": "2026-01-08"
+      "start_date": "2026-01-03",
+      "end_date": "2026-01-09"
     }
   }
 }

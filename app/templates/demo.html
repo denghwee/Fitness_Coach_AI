@@ -35,7 +35,7 @@
     const msg = document.getElementById("msg").value;
     add("You: " + msg);
 
-    const res = await fetch("http://localhost:5001/agent/chat", {
+    const res = await fetch("http://localhost:5003/api/v3/agent/chatv2", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id: userId, message: msg })
