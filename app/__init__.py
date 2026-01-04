@@ -26,8 +26,7 @@ def create_app():
     # IMPORT MODELS (CHỈ Ở ĐÂY)
     from app import models
 
-    # REGISTER BLUEPRINT
-    from app.routes import agent_bp
+    from app.routes.agent_routes import agent_bp
     app.register_blueprint(agent_bp)
 
     return app

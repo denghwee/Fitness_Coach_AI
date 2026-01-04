@@ -1,1 +1,1 @@
-from .routes import *
+from .agent_routes import agent_bp
