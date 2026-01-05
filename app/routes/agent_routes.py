@@ -6,9 +6,6 @@ from app.controllers.agent_controller import AgentController
 agent_bp = Blueprint("agent", __name__, url_prefix="/api/v3/agent")
 
 
-
-
-
 # ===== CHAT =====
 @agent_bp.route("/chat", methods=["OPTIONS", "POST"])
 @jwt_required()

@@ -1,51 +1,28 @@
 from datetime import date
 import json
 from pathlib import Path
+from functools import lru_cache
 from typing import Any, Dict
 
-# In-memory cache
-_MEMORY: Dict[str, Dict[str, Any]] = {}
+from .repository import UserStateRepository, UserStateRepositoryImpl
 
-# Persistence file (project-root `data` folder)
-_STORE_PATH = Path.cwd() / "data" / "memory_store.json"
-_STORE_PATH.parent.mkdir(parents=True, exist_ok=True)
+# ==============================
+# Config
+# ==============================
 
+_repo: UserStateRepository = UserStateRepositoryImpl()
 
-def _load_from_disk() -> None:
-    global _MEMORY
-    try:
-        if _STORE_PATH.exists():
-            with open(_STORE_PATH, "r", encoding="utf-8") as f:
-                _MEMORY = json.load(f)
-        else:
-            _MEMORY = {}
-    except Exception:
-        # on any error, start with empty memory
-        _MEMORY = {}
+_BASE_DIR = Path.cwd() / "data" / "memory"
+_BASE_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def _save_to_disk() -> None:
-    tmp = _STORE_PATH.with_suffix(".tmp")
-    try:
-        with open(tmp, "w", encoding="utf-8") as f:
-            json.dump(_MEMORY, f, ensure_ascii=False, indent=2)
-        tmp.replace(_STORE_PATH)
-    except Exception:
-        # best-effort: ignore persistence failures
-        if tmp.exists():
-            try:
-                tmp.unlink()
-            except Exception:
-                pass
+def _user_path(user_id: str) -> Path:
+    return _BASE_DIR / f"{user_id}.json"
 
 
-# load persisted memory on import
-_load_from_disk()
-
-
-def get_user_state(user_id: str) -> dict:
-    return _MEMORY.get(user_id, {})
-
+# ==============================
+# Helpers
+# ==============================
 
 def _to_iso(d: Any) -> Any:
     try:
@@ -56,20 +33,72 @@ def _to_iso(d: Any) -> Any:
     return d
 
 
+# ==============================
+# Lazy load + cache
+# ==============================
+
+@lru_cache(maxsize=1024)
+def _load_user_state(user_id: str) -> Dict[str, Any]:
+    """
+    Load state từ DB (cached)
+    """
+    state = _repo.get_state(user_id)
+    return state or {}
+
+def _save_user_state(user_id: str, state: Dict[str, Any]) -> None:
+    path = _user_path(user_id)
+    tmp = path.with_suffix(".tmp")
+
+    try:
+        tmp.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8"
+        )
+        tmp.replace(path)
+    finally:
+        # invalidate cache cho user này
+        _load_user_state.cache_clear()
+
+
+# ==============================
+# Public API
+# ==============================
+
+def get_user_state(user_id: str) -> Dict[str, Any]:
+    """
+    Trả về state của user.
+    Nếu chưa tồn tại → {}
+    """
+    return _load_user_state(user_id).copy()
+
+
 def save_plan(user_id: str, plan_type: str, plan: dict, start, end) -> None:
-    state = _MEMORY.setdefault(user_id, {})
+    """
+    Lưu meal_plan / workout_plan cho user
+    """
+    state = _load_user_state(user_id).copy()
+
     state[plan_type] = {
         "plan": plan,
         "start_date": _to_iso(start),
         "end_date": _to_iso(end),
     }
-    _save_to_disk()
+
+    _repo.save_state(user_id, state)
+
+    # invalidate cache cho user này
+    _load_user_state.cache_clear()
 
 
 def is_plan_active(state: dict, plan_type: str) -> bool:
-    if plan_type not in state:
+    """
+    Check plan còn hiệu lực hay không
+    """
+    if not state or plan_type not in state:
         return False
+
     today = date.today().isoformat()
+
     try:
         return today <= state[plan_type]["end_date"]
     except Exception:

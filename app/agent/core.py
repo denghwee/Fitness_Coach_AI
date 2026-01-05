@@ -112,12 +112,13 @@ def handle_chat(llm, user_id: str, message: str):
 # Explicit actions (BUTTONS)
 # =====================================================
 
-def create_meal_plan(llm, db, user_id: str, profile: Any):
+def create_meal_plan(llm, user_id: str, profile: Any):
     """
     profile: AIProfileInputDTO
     """
 
-    state = get_user_state(db, user_id)
+    # ===== LOAD USER STATE (FROM DB VIA MEMORY) =====
+    state = get_user_state(user_id)
     goals = state.get("goals")
 
     # ===== RAG =====
@@ -160,8 +161,9 @@ def create_meal_plan(llm, db, user_id: str, profile: Any):
     if not plan:
         return {"type": "error", "message": "Failed to parse meal plan"}
 
+    # ===== SAVE TO DB VIA MEMORY =====
     start, end = default_plan_window()
-    save_plan(db, user_id, "meal_plan", plan, start, end)
+    save_plan(user_id, "meal_plan", plan, start, end)
 
     return {
         "type": "plan_created",
@@ -170,14 +172,16 @@ def create_meal_plan(llm, db, user_id: str, profile: Any):
     }
 
 
-def create_workout_plan(llm, db, user_id: str, profile: Any):
+def create_workout_plan(llm, user_id: str, profile: Any):
     """
     profile: AIProfileInputDTO
     """
-    
-    state = get_user_state(db, user_id)
+
+    # ===== LOAD USER STATE =====
+    state = get_user_state(user_id)
     goals = state.get("goals")
 
+    # ===== RAG =====
     retriever = get_retriever()
     try:
         expanded_q = (
@@ -194,6 +198,7 @@ def create_workout_plan(llm, db, user_id: str, profile: Any):
     except Exception:
         context = ""
 
+    # ===== PROMPT =====
     prompt = (
         WORKOUT_PROMPT
         + "\n\nContext:\n" + context
@@ -222,8 +227,9 @@ def create_workout_plan(llm, db, user_id: str, profile: Any):
     if not plan:
         return {"type": "error", "message": "Failed to parse workout plan"}
 
+    # ===== SAVE TO DB VIA MEMORY =====
     start, end = default_plan_window()
-    save_plan(db, user_id, "workout_plan", plan, start, end)
+    save_plan(user_id, "workout_plan", plan, start, end)
 
     return {
         "type": "plan_created",
