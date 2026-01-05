@@ -16,3 +16,4 @@ class UserPlan(db.Model):
         server_default=db.func.now(),
         onupdate=db.func.now()
     )
+

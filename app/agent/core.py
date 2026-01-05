@@ -180,6 +180,8 @@ def create_workout_plan(llm, user_id: str, profile: Any):
     # ===== LOAD USER STATE =====
     state = get_user_state(user_id)
     goals = state.get("goals")
+    goal = profile.goal or "general_fitness"
+
 
     # ===== RAG =====
     retriever = get_retriever()
@@ -187,7 +189,7 @@ def create_workout_plan(llm, user_id: str, profile: Any):
         expanded_q = (
             f"workout plan guidance "
             f"experience={profile.experience_level} "
-            f"goal={profile.goal} "
+            f"goal={goal} "
             f"days={profile.available_days_per_week}"
         )
         docs = retriever.retrieve(expanded_q, k=6)
@@ -210,7 +212,7 @@ def create_workout_plan(llm, user_id: str, profile: Any):
                 "height_cm": profile.height_cm,
                 "weight_kg": profile.weight_kg,
                 "experience_level": profile.experience_level,
-                "goal": profile.goal,
+                "goal": goal,
                 "available_days_per_week": profile.available_days_per_week,
                 "session_duration_minutes": profile.session_duration_minutes,
                 "injuries": profile.injuries,

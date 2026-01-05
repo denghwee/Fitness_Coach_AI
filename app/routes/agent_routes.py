@@ -40,3 +40,38 @@ def meal_plan():
     # POST
     return AgentController.create_meal_plan()
 
+@agent_bp.route("/workout-plan/db", methods=["OPTIONS", "GET", "POST", "PUT", "DELETE"])
+@jwt_required()
+def workout_plan_db():
+    if request.method == "OPTIONS":
+        return "", 204
+
+    if request.method == "GET":
+        return AgentController.get_workout_plan()
+
+    if request.method == "POST":
+        return AgentController.post_workout_plan()
+
+    if request.method == "PUT":
+        return AgentController.put_workout_plan()
+
+    if request.method == "DELETE":
+        return AgentController.delete_workout_plan()
+
+@agent_bp.route("/meal-plan/db", methods=["OPTIONS", "GET", "POST", "PUT", "DELETE"])
+@jwt_required()
+def meal_plan_db():
+    if request.method == "OPTIONS":
+        return "", 204
+
+    if request.method == "GET":
+        return AgentController.get_meal_plan()
+
+    if request.method == "POST":
+        return AgentController.post_meal_plan()
+
+    if request.method == "PUT":
+        return AgentController.put_meal_plan()
+
+    if request.method == "DELETE":
+        return AgentController.delete_meal_plan()
