@@ -20,7 +20,7 @@ class OpenAIClient(BaseLLM):
                     "content": user_prompt
                 }
             ],
-            temperature=temperature or Config.DEFAULT_TEMPERATURE
+            # temperature=temperature or Config.DEFAULT_TEMPERATURE
         )
 
         return response.output_text
