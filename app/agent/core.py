@@ -12,6 +12,7 @@ from app.agent.safety import run_safety_check
 from app.memory.store import get_user_state, save_plan, is_plan_active
 from app.rag.qa import answer_query
 from app.rag.retriever import Retriever
+from app.memory import get_session_memory, update_session_memory
 
 
 # =====================================================
@@ -75,7 +76,7 @@ def _safe_parse_json(text: str, required_keys):
 # =====================================================
 
 def handle_chat(llm, user_id: str, message: str):
-    # 1. Safety (giữ lại)
+    # 1. Safety
     safety = run_safety_check(llm, message)
     if not safety["safe"]:
         return {
@@ -90,20 +91,38 @@ def handle_chat(llm, user_id: str, message: str):
 
     # 2. Load state
     state = get_user_state(user_id)
+
     workout_plan = state.get("workout_plan")
+    meal_plan = state.get("meal_plan")
+
+    session = get_session_memory(user_id)
+    chat_history = session.get("chat_history", [])
 
     # 3. Prompt-driven Q&A
     prompt_input = {
         "workout_plan": workout_plan,
+        "meal_plan": meal_plan,
+        "chat_history": chat_history,
         "user_question": message
     }
 
     answer = llm.chat(SYSTEM_PROMPT, json.dumps(prompt_input, ensure_ascii=False))
 
+    new_history = (
+        chat_history
+        + [{"role": "user", "content": message}]
+        + [{"role": "assistant", "content": answer}]
+    )
+
+    update_session_memory(user_id, {
+        "chat_history": new_history[-8:],  # 4 lượt hội thoại
+        "last_intent": "chat_qa"
+    })
+
     return {
         "type": "message",
         "message": answer,
-        "intent": "workout_qa",
+        "intent": "chat_qa",
         "decision": "answer"
     }
 

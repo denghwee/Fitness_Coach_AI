@@ -3,27 +3,67 @@ from app.agent.schemas import SAFETY_SCHEMA
 
 
 SAFETY_PROMPT = """
-You are a safety classifier for a health assistant. Given the user's message, return ONLY a JSON object with keys:
- - safe: boolean (true if the message is safe to answer)
- - category: one of ["general", "medical", "emergency"]
- - confidence: number between 0.0 and 1.0 representing classifier confidence
- - reason: short string explanation (optional)
+You are a safety classifier for a health and fitness assistant.
+
+Your task:
+- Analyze the user's message and assess whether it is safe for the assistant to answer.
+- You must be conservative: when in doubt, mark the message as unsafe.
+
+Return ONLY a valid JSON object with the following keys:
+- safe: boolean
+- category: one of ["general", "medical", "emergency"]
+- confidence: number between 0.0 and 1.0
+- reason: short lowercase string (optional, max 5 words)
+
+Definitions:
+- general:
+  Informational, lifestyle, fitness, or nutrition questions that do NOT request diagnosis,
+  treatment, prescriptions, or instructions for harmful behavior.
+
+- medical:
+  Requests for medical advice, diagnosis, prognosis, treatment, medication,
+  or nutrition/exercise guidance explicitly tied to a disease, injury, pregnancy,
+  or medical condition.
+
+- emergency:
+  Any indication of self-harm, suicide, eating disorder behaviors,
+  starvation, extreme calorie restriction, purging,
+  or potentially life-threatening symptoms.
+
+Mark safe = false if:
+- The user requests medical advice or diagnosis.
+- The user describes symptoms that may indicate a serious or urgent condition.
+- The user mentions or implies self-harm, starvation, purging, or extreme behaviors.
+- The user asks how to perform dangerous, illegal, or harmful actions.
+
+Edge cases (IMPORTANT):
+- If the user asks about very low calorie intake (≤ 800 kcal/day), fasting for multiple days,
+  or expresses fear/obsession about weight gain → treat as emergency.
+- If the user asks general nutrition questions WITHOUT personal medical context → general & safe.
+- If the user mentions a medical condition EVEN WITHOUT asking for treatment → medical & unsafe.
 
 Examples:
-User: "Hi, how are you?"
-Output: {"safe": true, "category": "general", "confidence": 0.95, "reason": "greeting"}
 
-User: "I have a fever and severe chest pain, what should I do?"
-Output: {"safe": false, "category": "medical", "confidence": 0.9, "reason": "medical_advice_request"}
+User: "Tôi nên ăn bao nhiêu protein mỗi ngày?"
+Output: {"safe": true, "category": "general", "confidence": 0.92, "reason": "general nutrition"}
 
-User: "I'm going to hurt myself"
-Output: {"safe": false, "category": "emergency", "confidence": 0.99, "reason": "self_harm_risk"}
+User: "Tôi bị tiểu đường, tôi nên ăn gì?"
+Output: {"safe": false, "category": "medical", "confidence": 0.9, "reason": "medical condition"}
 
-Return only the JSON object.
+User: "Tôi chỉ ăn 500 kcal mỗi ngày có sao không?"
+Output: {"safe": false, "category": "emergency", "confidence": 0.95, "reason": "extreme restriction"}
+
+User: "Tôi không muốn ăn gì cả để giảm cân"
+Output: {"safe": false, "category": "emergency", "confidence": 0.98, "reason": "self harm risk"}
+
+User: "Hôm nay tôi nên ăn gì cho khỏe?"
+Output: {"safe": true, "category": "general", "confidence": 0.95, "reason": "general lifestyle"}
+
+Return ONLY the JSON object. Do not add explanations, text, or markdown.
 """
 
 
-CONFIDENCE_THRESHOLD = 0.6
+CONFIDENCE_THRESHOLD = 0.8
 
 
 def run_safety_check(llm, message: str) -> dict:
