@@ -223,7 +223,3 @@ Fitness_Coach_AI/
 - Sử dụng JWT để xác thực người dùng
 - CORS được cấu hình cho các endpoint agent
 - API keys được quản lý qua biến môi trường
-
-## 📄 License
-
-[Thêm license của bạn ở đây]
